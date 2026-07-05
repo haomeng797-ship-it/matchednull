@@ -1,0 +1,27 @@
+Package: matchednull
+Title: Matched-Null Tests for Cluster-Count Claims
+Version: 0.0.0.9000
+Authors@R:
+    person("Miura", "Meng", email = "meng10@upenn.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0004-1522-1997"))
+Description: Builds Gaussian-copula matched nulls: synthetic twins of a dataset
+    that preserve every marginal distribution and the full correlation matrix
+    while containing no cluster structure by construction. A reported number of
+    clusters or "types" can then be tested against what the data's own margins
+    and covariance already produce, using any clustering pipeline. Implements
+    the procedure described in Meng (2026) "Types Without Taxa".
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    stats
+Suggests:
+    mclust,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://github.com/haomeng797-ship-it/matchednull
+BugReports: https://github.com/haomeng797-ship-it/matchednull/issues
