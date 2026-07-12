@@ -99,6 +99,25 @@ Two practical notes:
   multimodality before relying on the count test, and tie-break granular
   (Likert-type) scales before formal unimodality tests.
 
+## Stress-testing an exceedance: heavier tails
+
+"Exceeds the null" under Gaussian twins licenses only *structure beyond
+margins and correlations* — not types. Heavy-tailed dependence, where extreme
+values across variables arrive together, also exceeds a Gaussian null, and
+real questionnaire and clinical data are heavy-tailed more often than not. To
+separate the two readings, rerun the test with t-copula twins: same margins,
+same correlations, but tails that co-move.
+
+```{r, eval = FALSE}
+matched_null_test(x, pick_k, R = 200, copula = "t", df = 8)  # moderate tails
+matched_null_test(x, pick_k, R = 200, copula = "t", df = 3)  # heavy tails
+```
+
+The ladder reads: a result that exceeds the Gaussian twins *and* the t twins
+is hard to attribute to tails; a result the t twins reproduce was tail
+dependence, not types. Either way the verdict is sharper than what a single
+null could give.
+
 ## Reference
 
 The method, its positive controls, and its false-positive calibration are

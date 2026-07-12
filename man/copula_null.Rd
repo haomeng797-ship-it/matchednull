@@ -2,13 +2,20 @@
 % Please edit documentation in R/copula_null.R
 \name{copula_null}
 \alias{copula_null}
-\title{Draw one Gaussian-copula matched null ("null twin") of a dataset}
+\title{Draw one matched null ("null twin") of a dataset}
 \usage{
-copula_null(x, ridge = 1e-06)
+copula_null(x, copula = c("gaussian", "t"), df = 8, ridge = 1e-06)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame (rows = observations, columns =
 variables), complete cases only, at least two rows and two columns.}
+
+\item{copula}{Dependence family of the twin: \code{"gaussian"} (default) or
+\code{"t"}.}
+
+\item{df}{Degrees of freedom of the t copula, a single positive number
+(default 8; used only when \code{copula = "t"}). Smaller is heavier-tailed;
+\code{df = 3} is a hard stress test, \code{df = 8} a moderate one.}
 
 \item{ridge}{Small value added to the diagonal of the correlation matrix
 only if it is not positive definite (default \code{1e-6}).}
@@ -21,10 +28,11 @@ of \code{x}, rearranged.
 \description{
 Builds a synthetic twin of \code{x} that preserves every marginal distribution
 exactly and the correlation matrix to within sampling error, while
-containing no cluster structure by construction: all dependence in the twin
-is Gaussian. Clustering found in real data but not in its twins must come
-from structure beyond the margins and covariance; clustering found equally
-in both was never more than the data's shape.
+containing no cluster structure by construction. With
+\code{copula = "gaussian"} (the default) all dependence in the twin is Gaussian.
+Clustering found in real data but not in its twins must come from structure
+beyond the margins and covariance; clustering found equally in both was
+never more than the data's shape.
 }
 \details{
 The construction is a rank reordering in the tradition of Iman and Conover
@@ -33,6 +41,14 @@ replace each column with the sorted real values laid down in the rank order
 of the Gaussian column. Every real value is reused exactly once per column,
 which is why the margins match exactly; the rank correlation is matched
 exactly and the Pearson correlation to within sampling error.
+
+With \code{copula = "t"} the same construction is driven by a multivariate t
+sample instead: margins and correlations are preserved as before, but the
+twin also carries tail dependence, so extreme values across variables
+arrive together, the more strongly the smaller \code{df}. A t twin is still a
+single population with no clusters. Its use is as a stress test: a verdict
+of "exceeds the Gaussian null" that a t twin reproduces was heavy-tailed
+dependence, not types.
 }
 \examples{
 set.seed(1)
@@ -44,6 +60,10 @@ twin <- copula_null(x)
 all(sort(twin[, 1]) == sort(x[, 1]))
 # correlations close:
 round(cor(x) - cor(twin), 2)
+
+# a heavier-tailed twin for stress-testing:
+stress <- copula_null(x, copula = "t", df = 3)
+all(sort(stress[, 1]) == sort(x[, 1]))
 
 }
 \references{

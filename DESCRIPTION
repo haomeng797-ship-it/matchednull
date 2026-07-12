@@ -1,6 +1,6 @@
 Package: matchednull
 Title: Matched-Null Tests for Cluster-Count Claims
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R:
     person("Miura", "Meng", email = "meng10@upenn.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0004-1522-1997"))
