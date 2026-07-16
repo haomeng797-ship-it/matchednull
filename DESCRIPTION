@@ -4,13 +4,15 @@ Version: 0.1.0.9000
 Authors@R:
     person("Miura", "Meng", email = "meng10@upenn.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0004-1522-1997"))
-Description: Builds Gaussian-copula matched nulls: synthetic twins of a dataset
-    that preserve every marginal distribution and the full correlation matrix
-    while containing no cluster structure by construction. A reported number of
-    clusters or "types" can then be tested against what the data's own margins
-    and covariance already produce, using any clustering pipeline. Implements
-    the matched-null procedure of Meng (2026) "Types Without Taxa"
-    <https://osf.io/2ekcg>.
+Description: Builds matched nulls for cluster-count claims: synthetic twins of a
+    dataset that preserve every marginal distribution and the full correlation
+    matrix while containing no cluster structure by construction. A reported
+    number of clusters or "types" can then be tested against what the data's own
+    margins and covariance already produce, using any clustering pipeline. A
+    t-copula option adds tail dependence to the null, so that an apparent excess
+    of clusters can be checked against a heavier-tailed alternative before it is
+    read as evidence of types. Implements the matched-null procedure of Meng
+    (2026) "Types Without Taxa" <https://osf.io/2ekcg>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
