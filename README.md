@@ -1,19 +1,22 @@
 # matchednull
 
 Clustering methods will always give you clusters, even when the data are one
-smooth cloud. That makes results hard to trust: is the k your pipeline reports
-a property of the data, or just of the method?
+smooth cloud. That makes it hard to know whether the reported clusters reflect
+real structure or are simply artifacts of the method.
 
-matchednull helps you check. It builds a twin of your dataset with the same
-margins and the same correlations but no cluster structure, then runs your own
-pipeline on both. If the real data give you more clusters than the twins do,
-that's real signal. If not, now you know before a reviewer asks.
+matchednull helps you find out. It creates a null twin of your dataset with
+exactly the same marginal distributions and approximately the same correlation
+structure, but no cluster structure by construction. You then run your own
+clustering pipeline on both the observed data and the null twins. If the
+observed data consistently yield more clusters than the null twins, that's
+evidence of genuine cluster structure. Otherwise, you'll know before a
+reviewer asks.
 
-`copula_null()` builds the twin: every marginal distribution is preserved
-exactly and the correlation matrix to within sampling error, with no cluster
-structure by construction. `matched_null_test()` runs any clustering pipeline,
-supplied as a function, on the real data and on `R` twins, and asks whether
-the real result stands out.
+`copula_null()` generates the null twins, preserving every marginal
+distribution exactly and the correlation matrix to within sampling error.
+`matched_null_test()` applies any user-supplied clustering pipeline to the
+observed data and to `R` null twins, then tests whether the observed result
+stands out from the null distribution.
 
 ## Installation
 
