@@ -2,3 +2,5 @@ url: https://haomeng797-ship-it.github.io/matchednull/
 template:
   bootstrap: 5
   light-switch: true
+  theme: github-light
+  theme-dark: github-dark

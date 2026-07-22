@@ -1,11 +1,5 @@
 # matchednull
 
-[![CRAN
-status](https://www.r-pkg.org/badges/version/matchednull)](https://CRAN.R-project.org/package=matchednull)
-[![Downloads](https://cranlogs.r-pkg.org/badges/matchednull)](https://CRAN.R-project.org/package=matchednull)
-
-Documentation: <https://haomeng797-ship-it.github.io/matchednull/>
-
 Clustering methods will always give you clusters, even when the data are
 one smooth cloud. That makes it hard to know whether the reported
 clusters reflect real structure or are simply artifacts of the method.
