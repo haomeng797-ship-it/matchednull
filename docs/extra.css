@@ -1,0 +1,23 @@
+/* github-flavored dark palette */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #0d1117;
+  --bs-body-color: #e6edf3;
+  --bs-secondary-bg: #161b22;
+  --bs-tertiary-bg: #161b22;
+  --bs-border-color: #30363d;
+  --bs-link-color: #4493f8;
+  --bs-link-hover-color: #79b8ff;
+}
+[data-bs-theme="dark"] .navbar {
+  background-color: #161b22 !important;
+  border-bottom: 1px solid #30363d;
+}
+[data-bs-theme="dark"] pre,
+[data-bs-theme="dark"] code {
+  background-color: #161b22;
+}
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] footer {
+  background-color: #0d1117;
+  border-color: #30363d;
+}
