@@ -1,0 +1,137 @@
+# Testing a cluster count with matched nulls
+
+## The question
+
+A clustering method applied to continuous data will report some number
+of clusters whether or not any exist. So when an analysis announces that
+a dataset contains, say, four types, the number may describe the
+population, or only the shape of the data under that method.
+`matchednull` separates the two.
+
+## The idea: a null twin
+
+[`copula_null()`](https://haomeng797-ship-it.github.io/matchednull/reference/copula_null.md)
+builds a synthetic twin of your data that keeps everything innocent and
+removes the one thing in question:
+
+- every variable’s distribution is preserved **exactly** (the twin
+  reuses the real values, reshuffled);
+- the correlation matrix is preserved to within sampling error;
+- all remaining dependence is Gaussian, so the twin contains **no
+  cluster structure by construction**.
+
+If your pipeline finds as many clusters in the twins as in the real
+data, those clusters were the data’s shape, not its people.
+
+``` r
+
+library(matchednull)
+
+set.seed(1)
+x <- matrix(rnorm(400 * 3), 400, 3) %*%
+  chol(matrix(c(1, .5, .3, .5, 1, .4, .3, .4, 1), 3, 3))
+twin <- copula_null(x)
+
+all(sort(twin[, 1]) == sort(x[, 1]))   # margins: identical
+#> [1] TRUE
+round(cor(x) - cor(twin), 2)           # correlations: close
+#>      [,1]  [,2]  [,3]
+#> [1,] 0.00  0.01  0.05
+#> [2,] 0.01  0.00 -0.03
+#> [3,] 0.05 -0.03  0.00
+```
+
+## The test
+
+[`matched_null_test()`](https://haomeng797-ship-it.github.io/matchednull/reference/matched_null_test.md)
+takes your data and **your own pipeline**, wrapped as a function that
+returns one number (typically the selected number of clusters). It runs
+the identical pipeline on the real data and on `R` twins, and asks
+whether the real answer stands out.
+
+``` r
+
+suppressPackageStartupMessages(library(mclust))
+pick_k <- function(d) Mclust(d, G = 1:4, modelNames = "VVV", verbose = FALSE)$G
+
+# 1. Typeless data: the test should stay quiet.
+set.seed(7)
+matched_null_test(x, pick_k, R = 30)
+#> Matched-null test (30 Gaussian null twins)
+#>   real statistic:      1
+#>   null interval:       [1, 1]
+#>   p (real >= nulls):   1
+#>   verdict:             null-like (within the twins' interval)
+```
+
+``` r
+
+# 2. Two genuine types, hidden in the dependence structure
+#    (identical margins, opposite correlation orientation).
+set.seed(42)
+z <- sample(2, 400, replace = TRUE)
+X <- matrix(rnorm(400 * 4), 400, 4)
+L1 <- chol(matrix(c(1, .85, .85, 1), 2, 2))
+L2 <- chol(matrix(c(1, -.85, -.85, 1), 2, 2))
+X[z == 1, 1:2] <- X[z == 1, 1:2] %*% L1
+X[z == 1, 3:4] <- X[z == 1, 3:4] %*% L1
+X[z == 2, 1:2] <- X[z == 2, 1:2] %*% L2
+X[z == 2, 3:4] <- X[z == 2, 3:4] %*% L2
+
+set.seed(7)
+matched_null_test(X, pick_k, R = 30)
+#> Matched-null test (30 Gaussian null twins)
+#>   real statistic:      2
+#>   null interval:       [1, 1]
+#>   p (real >= nulls):   0.032
+#>   verdict:             exceeds the null (beyond margins + covariance)
+```
+
+The first call returns *null-like*: whatever clustering the pipeline
+reports is reproduced by twins with no types. The second returns
+*exceeds the null*: the grouping lives in structure the twins cannot
+carry.
+
+## Plugging in your own pipeline
+
+`cluster_fn` can wrap anything: a k-means heuristic, a published
+typology’s exact workflow, or any scalar measure of clustering strength.
+The null is defined at the level of the data, not the pipeline.
+
+Two practical notes:
+
+- **Set a seed before calling** — reproducibility is deliberately left
+  to the caller.
+- **Check the margins first.** The one regime the null cannot flag is
+  types so separated that they are visible in the margins and covariance
+  themselves (strongly bimodal variables); inspect the margins for
+  pronounced multimodality before relying on the count test, and
+  tie-break granular (Likert-type) scales before formal unimodality
+  tests.
+
+## Stress-testing an exceedance: heavier tails
+
+“Exceeds the null” under Gaussian twins licenses only *structure beyond
+margins and correlations* — not types. Heavy-tailed dependence, where
+extreme values across variables arrive together, also exceeds a Gaussian
+null, and real questionnaire and clinical data are heavy-tailed more
+often than not. To separate the two readings, rerun the test with
+t-copula twins: same margins, same correlations, but tails that co-move.
+
+``` r
+
+matched_null_test(x, pick_k, R = 200, copula = "t", df = 8)  # moderate tails
+matched_null_test(x, pick_k, R = 200, copula = "t", df = 3)  # heavy tails
+```
+
+The ladder reads: a result that exceeds the Gaussian twins *and* the t
+twins is hard to attribute to tails; a result the t twins reproduce was
+tail dependence, not types. Either way the verdict is sharper than what
+a single null could give.
+
+## Reference
+
+The method, its positive controls, and its false-positive calibration
+are described in the accompanying paper: *Types Without Taxa: A
+Covariance-Matched-Null Multiverse Test of Categorical versus Continuous
+Personality Structure*.

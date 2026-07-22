@@ -1,3 +1,6 @@
-^cran-comments\.md$
-^\.gitignore$
 ^\.git$
+^\.gitignore$
+^_pkgdown\.yml$
+^cran-comments\.md$
+^docs$
+^pkgdown$
