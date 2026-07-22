@@ -6,6 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Matched-Null Tests for Cluster-Count Claims • matchednull</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -14,6 +19,7 @@
 <meta property="og:title" content="Matched-Null Tests for Cluster-Count Claims">
 <meta name="description" content="Builds matched nulls for cluster-count claims: synthetic twins of a dataset that preserve every marginal distribution and the full correlation matrix while containing no cluster structure by construction. A reported number of clusters or &quot;types&quot; can then be tested against what the data's own margins and covariance already produce, using any clustering pipeline. A t-copula option adds tail dependence to the null, so that an apparent excess of clusters can be checked against a heavier-tailed alternative before it is read as evidence of types. Implements the matched-null procedure of Meng (2026) &quot;Types Without Taxa&quot; &lt;https://osf.io/2ekcg&gt;.">
 <meta property="og:description" content="Builds matched nulls for cluster-count claims: synthetic twins of a dataset that preserve every marginal distribution and the full correlation matrix while containing no cluster structure by construction. A reported number of clusters or &quot;types&quot; can then be tested against what the data's own margins and covariance already produce, using any clustering pipeline. A t-copula option adds tail dependence to the null, so that an apparent excess of clusters can be checked against a heavier-tailed alternative before it is read as evidence of types. Implements the matched-null procedure of Meng (2026) &quot;Types Without Taxa&quot; &lt;https://osf.io/2ekcg&gt;.">
+<meta property="og:image" content="https://haomeng797-ship-it.github.io/matchednull/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -57,8 +63,12 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="matchednull">matchednull<a class="anchor" aria-label="anchor" href="#matchednull"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="matchednull-">matchednull <a class="anchor" aria-label="anchor" href="#matchednull-"></a>
+</h1>
+</div>
+<p><a href="https://CRAN.R-project.org/package=matchednull" class="external-link"><img src="https://www.r-pkg.org/badges/version/matchednull" alt="CRAN status"></a> <a href="https://CRAN.R-project.org/package=matchednull" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/matchednull" alt="Downloads"></a></p>
+<p>Documentation: <a href="https://haomeng797-ship-it.github.io/matchednull/" class="uri">https://haomeng797-ship-it.github.io/matchednull/</a></p>
 <p>Clustering methods will always give you clusters, even when the data are one smooth cloud. That makes it hard to know whether the reported clusters reflect real structure or are simply artifacts of the method.</p>
 <p>matchednull helps you find out. It creates a null twin of your dataset with exactly the same marginal distributions and approximately the same correlation structure, but no cluster structure by construction. You then run your own clustering pipeline on both the observed data and the null twins. If the observed data consistently yield more clusters than the null twins, that’s evidence of genuine cluster structure. Otherwise, you’ll know before a reviewer asks.</p>
 <p><code><a href="reference/copula_null.html">copula_null()</a></code> generates the null twins, preserving every marginal distribution exactly and the correlation matrix to within sampling error. <code><a href="reference/matched_null_test.html">matched_null_test()</a></code> applies any user-supplied clustering pipeline to the observed data and to <code>R</code> null twins, then tests whether the observed result stands out from the null distribution.</p>
