@@ -2,7 +2,6 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/matchednull)](https://CRAN.R-project.org/package=matchednull)
-[![Downloads](https://cranlogs.r-pkg.org/badges/matchednull)](https://CRAN.R-project.org/package=matchednull)
 
 Documentation: <https://haomeng797-ship-it.github.io/matchednull/>
 
