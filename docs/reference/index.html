@@ -16,6 +16,11 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/matchednull.html">Get started</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/matchednull.html">Testing a cluster count with matched nulls</a></li>
+    <li><a class="dropdown-item" href="../articles/how-it-works.html">How the matched-null test works</a></li>
+  </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -38,9 +43,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="build-a-matched-null">Build a matched null<a class="anchor" aria-label="anchor" href="#build-a-matched-null"></a></h2>
 
-
+      <div class="section-desc"><p>Generate synthetic twins that keep the margins and correlations of the data but contain no cluster structure by construction.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -53,15 +58,25 @@
 
         </dt>
         <dd>Draw one matched null ("null twin") of a dataset</dd>
+      </dl></div><div class="section level2">
+      <h2 id="run-the-test">Run the test<a class="anchor" aria-label="anchor" href="#run-the-test"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Compare what a clustering pipeline reports on the real data against what it reports on the matched nulls.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="matched_null_test.html">matched_null_test()</a></code>
 
         </dt>
         <dd>Test a cluster count against matched nulls</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

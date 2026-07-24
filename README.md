@@ -1,8 +1,8 @@
 # matchednull <img src="man/figures/logo.png" align="right" height="139" alt="matchednull hex logo" />
 
 [![CRAN status](https://www.r-pkg.org/badges/version/matchednull)](https://CRAN.R-project.org/package=matchednull)
-
-Documentation: <https://haomeng797-ship-it.github.io/matchednull/>
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Preregistration](https://img.shields.io/badge/OSF-prereg-337ab7.svg)](https://doi.org/10.17605/OSF.IO/2EKCG)
 
 Clustering methods will always give you clusters, even when the data are one
 smooth cloud. That makes it hard to know whether the reported clusters reflect
@@ -15,6 +15,14 @@ clustering pipeline on both the observed data and the null twins. If the
 observed data consistently yield more clusters than the null twins, that's
 evidence of genuine cluster structure. Otherwise, you'll know before a
 reviewer asks.
+
+<p align="center">
+  <img src="man/figures/positive_control.png" width="90%" alt="Positive controls: the test detects real types and stays quiet on typeless data">
+</p>
+
+*Positive controls. On typeless data the test stays within the null band
+(grey). When real types are present it detects them (red), whether they live
+only in the correlation structure (left) or in well-separated means (right).*
 
 `copula_null()` generates the null twins, preserving every marginal
 distribution exactly and the correlation matrix to within sampling error.
@@ -51,7 +59,10 @@ matched_null_test(x, pick_k, R = 50)
 ```
 
 See `vignette("matchednull")` for the full walk-through, including a case
-where genuine types hide in the dependence structure and the test fires.
+where genuine types hide in the dependence structure and the test fires. The
+[How it works](https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.html)
+article covers the null construction, the positive controls, and the
+false-positive calibration in more detail.
 
 In our calibration runs on skewed but clusterless data, standard criteria
 (BIC, the bootstrap LRT) reported structure in every dataset. The matched-null

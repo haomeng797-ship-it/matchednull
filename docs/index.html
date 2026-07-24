@@ -39,6 +39,13 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="articles/matchednull.html">Get started</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/matchednull.html">Testing a cluster count with matched nulls</a></li>
+    <li><a class="dropdown-item" href="articles/how-it-works.html">How the matched-null test works</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
@@ -67,10 +74,12 @@
 <img src="logo.png" class="logo" alt=""><h1 id="matchednull-">matchednull <a class="anchor" aria-label="anchor" href="#matchednull-"></a>
 </h1>
 </div>
-<p><a href="https://CRAN.R-project.org/package=matchednull" class="external-link"><img src="https://www.r-pkg.org/badges/version/matchednull" alt="CRAN status"></a></p>
-<p>Documentation: <a href="https://haomeng797-ship-it.github.io/matchednull/" class="uri">https://haomeng797-ship-it.github.io/matchednull/</a></p>
+<p><a href="https://CRAN.R-project.org/package=matchednull" class="external-link"><img src="https://www.r-pkg.org/badges/version/matchednull" alt="CRAN status"></a> <a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT"></a> <a href="https://doi.org/10.17605/OSF.IO/2EKCG" class="external-link"><img src="https://img.shields.io/badge/OSF-prereg-337ab7.svg" alt="Preregistration"></a></p>
 <p>Clustering methods will always give you clusters, even when the data are one smooth cloud. That makes it hard to know whether the reported clusters reflect real structure or are simply artifacts of the method.</p>
 <p>matchednull helps you find out. It creates a null twin of your dataset with exactly the same marginal distributions and approximately the same correlation structure, but no cluster structure by construction. You then run your own clustering pipeline on both the observed data and the null twins. If the observed data consistently yield more clusters than the null twins, that’s evidence of genuine cluster structure. Otherwise, you’ll know before a reviewer asks.</p>
+<p align="center">
+<img src="reference/figures/positive_control.png" width="90%" alt="Positive controls: the test detects real types and stays quiet on typeless data"></p>
+<p><em>Positive controls. On typeless data the test stays within the null band (grey). When real types are present it detects them (red), whether they live only in the correlation structure (left) or in well-separated means (right).</em></p>
 <p><code><a href="reference/copula_null.html">copula_null()</a></code> generates the null twins, preserving every marginal distribution exactly and the correlation matrix to within sampling error. <code><a href="reference/matched_null_test.html">matched_null_test()</a></code> applies any user-supplied clustering pipeline to the observed data and to <code>R</code> null twins, then tests whether the observed result stands out from the null distribution.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -99,7 +108,7 @@
 <span><span class="co">#&gt;   null interval:       [1, 1]</span></span>
 <span><span class="co">#&gt;   p (real &gt;= nulls):   1</span></span>
 <span><span class="co">#&gt;   verdict:             null-like (within the twins' interval)</span></span></code></pre></div>
-<p>See <code><a href="articles/matchednull.html">vignette("matchednull")</a></code> for the full walk-through, including a case where genuine types hide in the dependence structure and the test fires.</p>
+<p>See <code><a href="articles/matchednull.html">vignette("matchednull")</a></code> for the full walk-through, including a case where genuine types hide in the dependence structure and the test fires. The <a href="https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.html">How it works</a> article covers the null construction, the positive controls, and the false-positive calibration in more detail.</p>
 <p>In our calibration runs on skewed but clusterless data, standard criteria (BIC, the bootstrap LRT) reported structure in every dataset. The matched-null test flagged none of them.</p>
 </div>
 <div class="section level2">

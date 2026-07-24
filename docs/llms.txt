@@ -2,6 +2,9 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/matchednull)](https://CRAN.R-project.org/package=matchednull)
+[![License:
+MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Preregistration](https://img.shields.io/badge/OSF-prereg-337ab7.svg)](https://doi.org/10.17605/OSF.IO/2EKCG)
 
 Documentation: <https://haomeng797-ship-it.github.io/matchednull/>
 
@@ -16,6 +19,14 @@ then run your own clustering pipeline on both the observed data and the
 null twins. If the observed data consistently yield more clusters than
 the null twins, that’s evidence of genuine cluster structure. Otherwise,
 you’ll know before a reviewer asks.
+
+![Positive controls: the test detects real types and stays quiet on
+typeless data](reference/figures/positive_control.png)
+
+*Positive controls. On typeless data the test stays within the null band
+(grey). When real types are present it detects them (red), whether they
+live only in the correlation structure (left) or in well-separated means
+(right).*
 
 [`copula_null()`](https://haomeng797-ship-it.github.io/matchednull/reference/copula_null.md)
 generates the null twins, preserving every marginal distribution exactly
@@ -58,7 +69,10 @@ matched_null_test(x, pick_k, R = 50)
 See
 [`vignette("matchednull")`](https://haomeng797-ship-it.github.io/matchednull/articles/matchednull.md)
 for the full walk-through, including a case where genuine types hide in
-the dependence structure and the test fires.
+the dependence structure and the test fires. The [How it
+works](https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.html)
+article covers the null construction, the positive controls, and the
+false-positive calibration in more detail.
 
 In our calibration runs on skewed but clusterless data, standard
 criteria (BIC, the bootstrap LRT) reported structure in every dataset.
@@ -72,16 +86,33 @@ are described in the accompanying paper *Types Without Taxa* (Meng,
 
 # Package index
 
-## All functions
+## Build a matched null
+
+Generate synthetic twins that keep the margins and correlations of the
+data but contain no cluster structure by construction.
 
 - [`copula_null()`](https://haomeng797-ship-it.github.io/matchednull/reference/copula_null.md)
   : Draw one matched null ("null twin") of a dataset
+
+## Run the test
+
+Compare what a clustering pipeline reports on the real data against what
+it reports on the matched nulls.
+
 - [`matched_null_test()`](https://haomeng797-ship-it.github.io/matchednull/reference/matched_null_test.md)
   : Test a cluster count against matched nulls
 
 # Articles
 
-### All vignettes
+### Articles
 
 - [Testing a cluster count with matched
   nulls](https://haomeng797-ship-it.github.io/matchednull/articles/matchednull.md):
+
+- [How the matched-null test
+  works](https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.md):
+
+  The null construction, the test statistic, and the calibration
+  evidence behind matchednull: why a Gaussian-copula twin isolates
+  cluster structure, and what the positive controls and the
+  personality-data runs show.

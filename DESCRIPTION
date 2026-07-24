@@ -26,5 +26,5 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://github.com/haomeng797-ship-it/matchednull
+URL: https://haomeng797-ship-it.github.io/matchednull/, https://github.com/haomeng797-ship-it/matchednull
 BugReports: https://github.com/haomeng797-ship-it/matchednull/issues

@@ -4,3 +4,4 @@
 ^cran-comments\.md$
 ^docs$
 ^pkgdown$
+^vignettes/articles$

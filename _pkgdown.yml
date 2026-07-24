@@ -1,6 +1,43 @@
 url: https://haomeng797-ship-it.github.io/matchednull/
+
 template:
   bootstrap: 5
   light-switch: true
   theme: github-light
   theme-dark: github-dark
+  bslib:
+    primary: "#1c3d5a"
+
+navbar:
+  structure:
+    left:  [intro, articles, reference, news]
+    right: [search, github, lightswitch]
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: "Testing a cluster count with matched nulls"
+        href: articles/matchednull.html
+      - text: "How the matched-null test works"
+        href: articles/how-it-works.html
+
+reference:
+- title: Build a matched null
+  desc: >
+    Generate synthetic twins that keep the margins and correlations of the data
+    but contain no cluster structure by construction.
+  contents:
+  - copula_null
+- title: Run the test
+  desc: >
+    Compare what a clustering pipeline reports on the real data against what it
+    reports on the matched nulls.
+  contents:
+  - matched_null_test
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - matchednull
+  - articles/how-it-works
