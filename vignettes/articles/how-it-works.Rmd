@@ -100,7 +100,7 @@ A test that never fires is worthless: it must stay quiet on typeless data
 *and* fire when genuine types are present. The two panels below plant real
 types of two kinds and raise the signal strength.
 
-```{r positive-control, echo = FALSE, eval = TRUE, out.width = "100%", fig.cap = "Positive controls. Red points mark datasets where the test detects the planted types (real exceeds the null); grey points are read as null-like. Left: types that differ only in their within-component correlation, with identical margins. Right: types separated in their means."}
+```{r positive-control, echo = FALSE, eval = TRUE, out.width = "100%", fig.cap = "Positive controls. The grey shaded band is the 95% interval of the matched-null median k: a point is red (detected) when the real value exceeds the band and grey (null-like) when it falls inside. Left: types that differ only in their within-component correlation, with identical margins. Right: types separated in their means; the band widens at the largest separation, where the groups become visible in the margins themselves and the margin-preserving null reproduces them, so the point reads null-like."}
 knitr::include_graphics("figures/positive_control.png")
 ```
 

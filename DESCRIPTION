@@ -12,7 +12,7 @@ Description: Builds matched nulls for cluster-count claims: synthetic twins of a
     t-copula option adds tail dependence to the null, so that an apparent excess
     of clusters can be checked against a heavier-tailed alternative before it is
     read as evidence of types. Implements the matched-null procedure of Meng
-    (2026) "Types Without Taxa" <https://osf.io/2ekcg>.
+    (2026) "Types Without Taxa" <doi:10.17605/OSF.IO/2EKCG>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
