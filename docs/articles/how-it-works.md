@@ -1,6 +1,6 @@
 # How the matched-null test works
 
-## The problem: clustering always answers
+## The problem: clustering always returns clusters
 
 Give a clustering method a single smooth cloud of points and it will
 still return clusters. Model-selection criteria behave the same way:
@@ -15,7 +15,7 @@ The matched-null test separates the two by asking a single question:
 **would a dataset with the same margins and the same correlations, but
 no types, have produced the same answer?**
 
-## A null with the structure kept and the types removed
+## Constructing the matched null
 
 We want a reference dataset that matches the real one in every respect
 that is *not* in question, and is empty of the one thing that is. Two
@@ -29,24 +29,24 @@ The feature in question, latent groups, must be absent by construction.
 
 A Gaussian copula does exactly this. Write the data as columns
 $`X_1, \dots, X_p`$ with empirical marginal distributions
-$`F_1, \dots, F_p`$ and correlation matrix $`R`$. The null twin
-$`\tilde X`$ is built in two steps:
+$`F_1, \dots, F_p`$ and correlation matrix $`R`$. The null twin $`Y`$ is
+built in two steps:
 
-1.  draw $`Z \sim \mathcal{N}(0, \tilde R)`$, where $`\tilde R`$ is
-    chosen so that the induced correlations match $`R`$;
+1.  draw $`Z \sim \mathcal{N}(0, \Omega)`$, where $`\Omega`$ is chosen
+    so that the induced correlations match $`R`$;
 2.  push each column back through its own empirical quantile function,
-    $`\tilde X_j = F_j^{-1}\!\big(\Phi(Z_j)\big)`$, which reuses the
-    observed values of variable $`j`$.
+    $`Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)`$, which reuses the observed
+    values of variable $`j`$.
 
-By Sklar’s theorem the joint law of $`\tilde X`$ is the Gaussian copula
-with margins $`F_j`$. Three things follow. Each $`\tilde X_j`$ has
-*exactly* the empirical distribution of $`X_j`$: the twin is a
-reshuffling of the real values, so no marginal test can tell them apart.
-The correlation matrix of $`\tilde X`$ equals $`R`$ to within sampling
-error. And the joint density is unimodal, with no islands or gaps, so
-**the twin contains no cluster structure by construction**. Any clusters
-your pipeline reports on the twin are therefore manufactured by the
-pipeline, not carried by the data.
+By Sklar’s theorem the joint law of $`Y`$ is the Gaussian copula with
+margins $`F_j`$. Three things follow. Each $`Y_j`$ has *exactly* the
+empirical distribution of $`X_j`$: the twin is a reshuffling of the real
+values, so no marginal test can tell them apart. The correlation matrix
+of $`Y`$ equals $`R`$ to within sampling error. And the joint density is
+unimodal, with no islands or gaps, so **the twin contains no cluster
+structure by construction**. Any clusters your pipeline reports on the
+twin are therefore manufactured by the pipeline, not carried by the
+data.
 
 ``` r
 
@@ -61,14 +61,14 @@ all(sort(twin[, 1]) == sort(x[, 1]))   # margins: identical
 round(cor(x) - cor(twin), 2)           # correlations: close
 ```
 
-## The test
+## The test statistic
 
 Let $`T(\cdot)`$ be your pipeline, wrapped as a function that returns
 one number, typically the selected number of clusters, but it can be any
 scalar measure of clustering strength. Compute the real statistic
 $`t_0 = T(X)`$, then generate $`R`$ twins and compute
-$`t_1, \dots, t_R`$ with $`t_r = T(\tilde X^{(r)})`$. The one-sided
-$`p`$-value is
+$`t_1, \dots, t_R`$ with $`t_r = T(Y^{(r)})`$. The one-sided $`p`$-value
+is
 
 ``` math
 p \;=\; \frac{1 + \#\{\, r : t_r \ge t_0 \,\}}{R + 1}.
@@ -85,23 +85,29 @@ workflow, or a mixture model.
 matched_null_test(x, cluster_fn = function(d) mclust::Mclust(d, verbose = FALSE)$G, R = 200)
 ```
 
-## Does the test have power?
+## Positive controls: sensitivity to genuine types
 
-A false-positive control that never fires is worthless. The test must
-stay quiet on typeless data *and* fire when types are really there. The
-two panels below plant real types of two kinds and increase the signal.
+A test that never fires is worthless: it must stay quiet on typeless
+data *and* fire when genuine types are present. The two panels below
+plant real types of two kinds and raise the signal strength.
 
-![Positive controls. Red points mark datasets where the test detects the
-planted types (real exceeds the null); grey points are read as
-null-like. Left: types that differ only in their within-component
-correlation, with identical margins. Right: types separated in their
-means.](figures/positive_control.png)
+![Positive controls. The grey shaded band is the 95% interval of the
+matched-null median k: a point is red (detected) when the real value
+exceeds the band and grey (null-like) when it falls inside. Left: types
+that differ only in their within-component correlation, with identical
+margins. Right: types separated in their means; the band widens at the
+largest separation, where the groups become visible in the margins
+themselves and the margin-preserving null reproduces them, so the point
+reads null-like.](figures/positive_control.png)
 
-Positive controls. Red points mark datasets where the test detects the
-planted types (real exceeds the null); grey points are read as
-null-like. Left: types that differ only in their within-component
-correlation, with identical margins. Right: types separated in their
-means.
+Positive controls. The grey shaded band is the 95% interval of the
+matched-null median k: a point is red (detected) when the real value
+exceeds the band and grey (null-like) when it falls inside. Left: types
+that differ only in their within-component correlation, with identical
+margins. Right: types separated in their means; the band widens at the
+largest separation, where the groups become visible in the margins
+themselves and the margin-preserving null reproduces them, so the point
+reads null-like.
 
 In the left panel the types share identical margins and differ only in
 the *orientation* of their within-group correlations. A single Gaussian
@@ -114,7 +120,7 @@ the familiar way, and the test again fires as the separation grows.
 Where there is structure the matched null cannot carry, the test finds
 it.
 
-## Is the test calibrated on real data?
+## Empirical application: personality inventories
 
 The motivating application is the claim that personality inventories
 contain a small number of latent “types.” Running the test across all
@@ -138,7 +144,7 @@ as extra components; the twins, which share that skew and correlation,
 climb with them. The apparent “types” are the shape of the data under
 `mclust`, not latent kinds of people.
 
-## A second opinion: taxometrics
+## Convergent evidence from taxometrics
 
 The mixture-model result lines up with an older tradition. The
 Comparison Curve Fit Index (CCFI) from taxometric analysis scores
@@ -158,7 +164,7 @@ methodological traditions that rarely meet, mixture-model cluster
 counting and taxometrics, return the same verdict, which is reassuring
 precisely because their assumptions differ.
 
-## Heavy tails: the t-copula stress test
+## Heavy-tailed alternatives: the t-copula null
 
 A verdict of *exceeds the Gaussian null* licenses only the conclusion
 that the data carry structure beyond their margins and correlations.
@@ -179,7 +185,7 @@ the t twins is hard to attribute to tails. A result the t twins
 reproduce was tail dependence, not types. Either way the verdict is
 sharper than a single null could give.
 
-## Where the test can be fooled
+## A boundary case: separation in the margins
 
 The one regime the null cannot flag is types so separated that the
 separation shows up in the margins themselves, turning a variable

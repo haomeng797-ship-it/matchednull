@@ -6,8 +6,6 @@ status](https://www.r-pkg.org/badges/version/matchednull)](https://CRAN.R-projec
 MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Preregistration](https://img.shields.io/badge/OSF-prereg-337ab7.svg)](https://doi.org/10.17605/OSF.IO/2EKCG)
 
-Documentation: <https://haomeng797-ship-it.github.io/matchednull/>
-
 Clustering methods will always give you clusters, even when the data are
 one smooth cloud. That makes it hard to know whether the reported
 clusters reflect real structure or are simply artifacts of the method.
@@ -23,10 +21,14 @@ you’ll know before a reviewer asks.
 ![Positive controls: the test detects real types and stays quiet on
 typeless data](reference/figures/positive_control.png)
 
-*Positive controls. On typeless data the test stays within the null band
-(grey). When real types are present it detects them (red), whether they
-live only in the correlation structure (left) or in well-separated means
-(right).*
+*Positive controls. The grey shaded band is the matched null’s 95%
+interval: a point is red (detected) when the real number of clusters
+exceeds the band, grey (null-like) when it falls inside. The test
+detects real types whether they live only in the correlation structure
+(left) or in well-separated means (right). In the right panel the band
+widens at the largest separation, where the groups grow far enough apart
+to surface in the margins themselves and the margin-preserving null
+reproduces them.*
 
 [`copula_null()`](https://haomeng797-ship-it.github.io/matchednull/reference/copula_null.md)
 generates the null twins, preserving every marginal distribution exactly

@@ -16,8 +16,6 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: "Testing a cluster count with matched nulls"
-        href: articles/matchednull.html
       - text: "How the matched-null test works"
         href: articles/how-it-works.html
 
