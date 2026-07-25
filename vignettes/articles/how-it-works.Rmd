@@ -180,10 +180,54 @@ two-humped needs no null to reveal its groups. Inspect the margins for
 pronounced multimodality before relying on the count test, and tie-break
 granular Likert-type scales before formal unimodality tests.
 
-## Reference
+## Related approaches
+
+Testing a clustering result against a reference distribution is an old idea,
+and the choice of reference is what separates the methods.
+
+The gap statistic (Tibshirani, Walther, and Hastie, 2001) compares the observed
+within-cluster dispersion to a uniform or PCA-aligned reference, which ignores
+the correlation structure of the data. SigClust (Liu, Hayes, Nobel, and Marron,
+2008) tests a single two-way split against a single Gaussian null. Neither
+preserves the marginal distributions, which matters for the skewed and granular
+scales common in questionnaire data.
+
+The closest relative is UNPaC (Helgeson, Vock, and Bair, 2021), which also
+builds its reference with a Gaussian copula. Two things differ. UNPaC's
+reference is *ortho-unimodal*: the margins are smoothed by kernel density
+estimation and made unimodal, so a bimodal variable counts as evidence for
+clustering. `matchednull` reuses the observed values, so the margins of the
+twin are identical to the real ones and marginal shape is conceded to the null.
+The test is therefore the more conservative of the two, and it answers a
+narrower question: is there cluster structure *beyond* what the margins and
+correlations already imply. UNPaC also compares a fixed cluster index, while
+`matched_null_test()` compares whatever scalar the user's own pipeline returns,
+which is what allows a published typology's exact workflow to be tested as it
+was actually run.
+
+The two are complements rather than substitutes. A result that clears the
+unimodal reference of UNPaC and the margin-preserving reference here is
+supported by both readings.
+
+## References
 
 The method, its positive controls, and its false-positive calibration are
 described in the accompanying paper, *Types Without Taxa: A
 Covariance-Matched-Null Multiverse Test of Categorical versus Continuous
 Personality Structure* (Meng, 2026; preregistration:
 <https://doi.org/10.17605/OSF.IO/2EKCG>).
+
+Helgeson, E. S., Vock, D. M., and Bair, E. (2021). Nonparametric cluster
+significance testing with reference to a unimodal null distribution.
+*Biometrics*, 77(4), 1215-1226.
+<https://doi.org/10.1111/biom.13376>
+
+Liu, Y., Hayes, D. N., Nobel, A., and Marron, J. S. (2008). Statistical
+significance of clustering for high-dimension, low-sample size data.
+*Journal of the American Statistical Association*, 103(483), 1281-1293.
+<https://doi.org/10.1198/016214508000000454>
+
+Tibshirani, R., Walther, G., and Hastie, T. (2001). Estimating the number of
+clusters in a data set via the gap statistic. *Journal of the Royal Statistical
+Society Series B*, 63(2), 411-423.
+<https://doi.org/10.1111/1467-9868.00293>

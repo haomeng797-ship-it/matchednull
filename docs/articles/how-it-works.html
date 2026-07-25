@@ -149,7 +149,7 @@ islands or gaps, so <strong>the twin contains no cluster structure by
 construction</strong>. Any clusters your pipeline reports on the twin
 are therefore manufactured by the pipeline, not carried by the data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haomeng797-ship-it.github.io/matchednull/">matchednull</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/haomeng797-ship-it/matchednull" class="external-link">matchednull</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">400</span> <span class="op">*</span> <span class="fl">3</span><span class="op">)</span>, <span class="fl">400</span>, <span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span></span>
@@ -296,12 +296,51 @@ multimodality before relying on the count test, and tie-break granular
 Likert-type scales before formal unimodality tests.</p>
 </div>
 <div class="section level2">
-<h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+<h2 id="related-approaches">Related approaches<a class="anchor" aria-label="anchor" href="#related-approaches"></a>
+</h2>
+<p>Testing a clustering result against a reference distribution is an
+old idea, and the choice of reference is what separates the methods.</p>
+<p>The gap statistic (Tibshirani, Walther, and Hastie, 2001) compares
+the observed within-cluster dispersion to a uniform or PCA-aligned
+reference, which ignores the correlation structure of the data. SigClust
+(Liu, Hayes, Nobel, and Marron, 2008) tests a single two-way split
+against a single Gaussian null. Neither preserves the marginal
+distributions, which matters for the skewed and granular scales common
+in questionnaire data.</p>
+<p>The closest relative is UNPaC (Helgeson, Vock, and Bair, 2021), which
+also builds its reference with a Gaussian copula. Two things differ.
+UNPaC’s reference is <em>ortho-unimodal</em>: the margins are smoothed
+by kernel density estimation and made unimodal, so a bimodal variable
+counts as evidence for clustering. <code>matchednull</code> reuses the
+observed values, so the margins of the twin are identical to the real
+ones and marginal shape is conceded to the null. The test is therefore
+the more conservative of the two, and it answers a narrower question: is
+there cluster structure <em>beyond</em> what the margins and
+correlations already imply. UNPaC also compares a fixed cluster index,
+while <code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> compares whatever scalar the
+user’s own pipeline returns, which is what allows a published typology’s
+exact workflow to be tested as it was actually run.</p>
+<p>The two are complements rather than substitutes. A result that clears
+the unimodal reference of UNPaC and the margin-preserving reference here
+is supported by both readings.</p>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <p>The method, its positive controls, and its false-positive calibration
 are described in the accompanying paper, <em>Types Without Taxa: A
 Covariance-Matched-Null Multiverse Test of Categorical versus Continuous
 Personality Structure</em> (Meng, 2026; preregistration: <a href="https://doi.org/10.17605/OSF.IO/2EKCG" class="external-link uri">https://doi.org/10.17605/OSF.IO/2EKCG</a>).</p>
+<p>Helgeson, E. S., Vock, D. M., and Bair, E. (2021). Nonparametric
+cluster significance testing with reference to a unimodal null
+distribution. <em>Biometrics</em>, 77(4), 1215-1226. <a href="https://doi.org/10.1111/biom.13376" class="external-link uri">https://doi.org/10.1111/biom.13376</a></p>
+<p>Liu, Y., Hayes, D. N., Nobel, A., and Marron, J. S. (2008).
+Statistical significance of clustering for high-dimension, low-sample
+size data. <em>Journal of the American Statistical Association</em>,
+103(483), 1281-1293. <a href="https://doi.org/10.1198/016214508000000454" class="external-link uri">https://doi.org/10.1198/016214508000000454</a></p>
+<p>Tibshirani, R., Walther, G., and Hastie, T. (2001). Estimating the
+number of clusters in a data set via the gap statistic. <em>Journal of
+the Royal Statistical Society Series B</em>, 63(2), 411-423. <a href="https://doi.org/10.1111/1467-9868.00293" class="external-link uri">https://doi.org/10.1111/1467-9868.00293</a></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
