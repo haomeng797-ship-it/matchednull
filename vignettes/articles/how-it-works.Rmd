@@ -100,9 +100,20 @@ A test that never fires is worthless: it must stay quiet on typeless data
 *and* fire when genuine types are present. The two panels below plant real
 types of two kinds and raise the signal strength.
 
-```{r positive-control, echo = FALSE, eval = TRUE, out.width = "100%", fig.cap = "Positive controls. The grey shaded band is the 95% interval of the matched-null median k: a point is red (detected) when the real value exceeds the band and grey (null-like) when it falls inside. Left: types that differ only in their within-component correlation, with identical margins. Right: types separated in their means; the band widens at the largest separation, where the groups become visible in the margins themselves and the margin-preserving null reproduces them, so the point reads null-like."}
-knitr::include_graphics("figures/positive_control.png")
-```
+<figure>
+<img src="figures/positive_control.png" class="fig-light" width="100%"
+     alt="Positive controls: the test detects planted types and stays quiet on typeless data">
+<img src="figures/positive_control_dark.png" class="fig-dark" width="100%"
+     alt="Positive controls: the test detects planted types and stays quiet on typeless data">
+<figcaption>Positive controls. Signal strength is the within-component
+correlation in panel A and the separation between means, in standard
+deviations, in panel B. The grey shaded band is the 95% interval of the
+matched-null median k: a point is red (detected) when the real value exceeds
+the band and grey (null-like) when it falls inside. In panel B the band widens
+at the largest separation, where the groups become visible in the margins
+themselves and the margin-preserving null reproduces them, so the point reads
+null-like.</figcaption>
+</figure>
 
 In the left panel the types share identical margins and differ only in the
 *orientation* of their within-group correlations. A single Gaussian copula
@@ -121,9 +132,13 @@ small number of latent "types." Running the test across all fourteen `mclust`
 covariance parameterizations, on several public Big Five and HEXACO datasets,
 gives the specification curve below.
 
-```{r spec-curve, echo = FALSE, eval = TRUE, out.width = "100%", fig.cap = "Selected number of types across all fourteen mclust covariance models (steps), against the null band the twins produce (grey). The median verdict is null-like in every dataset."}
-knitr::include_graphics("figures/spec_curve.png")
-```
+<figure class="fig-paper">
+<img src="figures/spec_curve.png" width="100%"
+     alt="Selected number of types across fourteen mclust models, against the null band">
+<figcaption>Selected number of types across all fourteen mclust covariance
+models (steps), against the null band the twins produce (grey). The median
+verdict is null-like in every dataset.</figcaption>
+</figure>
 
 The number of types the pipeline selects (the step function) sits inside the
 band the twins produce (grey) for the great majority of specifications, and the
@@ -140,9 +155,12 @@ Curve Fit Index (CCFI) from taxometric analysis scores whether a construct is
 better described as categorical (taxonic) or continuous (dimensional), with
 values below the midpoint favouring a dimensional structure.
 
-```{r ccfi, echo = FALSE, eval = TRUE, out.width = "100%", fig.cap = "Comparison Curve Fit Index by trait for NEO-120 and HEXACO. Values fall on the dimensional side of the midpoint throughout."}
-knitr::include_graphics("figures/ccfi.png")
-```
+<figure class="fig-paper">
+<img src="figures/ccfi.png" width="100%"
+     alt="Comparison Curve Fit Index by trait for NEO-120 and HEXACO">
+<figcaption>Comparison Curve Fit Index by trait for NEO-120 and HEXACO. Values
+fall on the dimensional side of the midpoint throughout.</figcaption>
+</figure>
 
 Every trait, in both inventories, falls on the dimensional side. Two
 methodological traditions that rarely meet, mixture-model cluster counting and

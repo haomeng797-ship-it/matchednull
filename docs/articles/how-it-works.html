@@ -197,19 +197,16 @@ model.</p>
 <p>A test that never fires is worthless: it must stay quiet on typeless
 data <em>and</em> fire when genuine types are present. The two panels
 below plant real types of two kinds and raise the signal strength.</p>
-<div class="figure">
-<img src="figures/positive_control.png" class="r-plt" alt="Positive controls. The grey shaded band is the 95% interval of the matched-null median k: a point is red (detected) when the real value exceeds the band and grey (null-like) when it falls inside. Left: types that differ only in their within-component correlation, with identical margins. Right: types separated in their means; the band widens at the largest separation, where the groups become visible in the margins themselves and the margin-preserving null reproduces them, so the point reads null-like." width="100%"><p class="caption">
-Positive controls. The grey shaded band is the 95% interval of the
-matched-null median k: a point is red (detected) when the real value
-exceeds the band and grey (null-like) when it falls inside. Left: types
-that differ only in their within-component correlation, with identical
-margins. Right: types separated in their means; the band widens at the
-largest separation, where the groups become visible in the margins
+<figure><img src="figures/positive_control.png" class="fig-light" width="100%" alt="Positive controls: the test detects planted types and stays quiet on typeless data"><img src="figures/positive_control_dark.png" class="fig-dark" width="100%" alt="Positive controls: the test detects planted types and stays quiet on typeless data"><figcaption>
+Positive controls. Signal strength is the within-component correlation
+in panel A and the separation between means, in standard deviations, in
+panel B. The grey shaded band is the 95% interval of the matched-null
+median k: a point is red (detected) when the real value exceeds the band
+and grey (null-like) when it falls inside. In panel B the band widens at
+the largest separation, where the groups become visible in the margins
 themselves and the margin-preserving null reproduces them, so the point
 reads null-like.
-</p>
-</div>
-<p>In the left panel the types share identical margins and differ only
+</figcaption></figure><p>In the left panel the types share identical margins and differ only
 in the <em>orientation</em> of their within-group correlations. A single
 Gaussian copula has one correlation matrix and cannot reproduce two, so
 as the within-group correlation grows the test fires. This is the regime
@@ -228,14 +225,11 @@ contain a small number of latent “types.” Running the test across all
 fourteen <code>mclust</code> covariance parameterizations, on several
 public Big Five and HEXACO datasets, gives the specification curve
 below.</p>
-<div class="figure">
-<img src="figures/spec_curve.png" class="r-plt" alt="Selected number of types across all fourteen mclust covariance models (steps), against the null band the twins produce (grey). The median verdict is null-like in every dataset." width="100%"><p class="caption">
+<figure class="fig-paper"><img src="figures/spec_curve.png" width="100%" alt="Selected number of types across fourteen mclust models, against the null band"><figcaption>
 Selected number of types across all fourteen mclust covariance models
 (steps), against the null band the twins produce (grey). The median
 verdict is null-like in every dataset.
-</p>
-</div>
-<p>The number of types the pipeline selects (the step function) sits
+</figcaption></figure><p>The number of types the pipeline selects (the step function) sits
 inside the band the twins produce (grey) for the great majority of
 specifications, and the median verdict is null-like in every dataset.
 The handful of specifications that climb above the band are the most
@@ -252,13 +246,10 @@ Comparison Curve Fit Index (CCFI) from taxometric analysis scores
 whether a construct is better described as categorical (taxonic) or
 continuous (dimensional), with values below the midpoint favouring a
 dimensional structure.</p>
-<div class="figure">
-<img src="figures/ccfi.png" class="r-plt" alt="Comparison Curve Fit Index by trait for NEO-120 and HEXACO. Values fall on the dimensional side of the midpoint throughout." width="100%"><p class="caption">
+<figure class="fig-paper"><img src="figures/ccfi.png" width="100%" alt="Comparison Curve Fit Index by trait for NEO-120 and HEXACO"><figcaption>
 Comparison Curve Fit Index by trait for NEO-120 and HEXACO. Values fall
 on the dimensional side of the midpoint throughout.
-</p>
-</div>
-<p>Every trait, in both inventories, falls on the dimensional side. Two
+</figcaption></figure><p>Every trait, in both inventories, falls on the dimensional side. Two
 methodological traditions that rarely meet, mixture-model cluster
 counting and taxometrics, return the same verdict, which is reassuring
 precisely because their assumptions differ.</p>
