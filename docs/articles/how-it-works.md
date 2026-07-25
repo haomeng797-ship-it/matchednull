@@ -91,21 +91,17 @@ A test that never fires is worthless: it must stay quiet on typeless
 data *and* fire when genuine types are present. The two panels below
 plant real types of two kinds and raise the signal strength.
 
-![Positive controls. The grey shaded band is the 95% interval of the
-matched-null median k: a point is red (detected) when the real value
-exceeds the band and grey (null-like) when it falls inside. Left: types
-that differ only in their within-component correlation, with identical
-margins. Right: types separated in their means; the band widens at the
-largest separation, where the groups become visible in the margins
-themselves and the margin-preserving null reproduces them, so the point
-reads null-like.](figures/positive_control.png)
+![Positive controls: the test detects planted types and stays quiet on
+typeless data](figures/positive_control.png)![Positive controls: the
+test detects planted types and stays quiet on typeless
+data](figures/positive_control_dark.png)
 
-Positive controls. The grey shaded band is the 95% interval of the
-matched-null median k: a point is red (detected) when the real value
-exceeds the band and grey (null-like) when it falls inside. Left: types
-that differ only in their within-component correlation, with identical
-margins. Right: types separated in their means; the band widens at the
-largest separation, where the groups become visible in the margins
+Positive controls. Signal strength is the within-component correlation
+in panel A and the separation between means, in standard deviations, in
+panel B. The grey shaded band is the 95% interval of the matched-null
+median k: a point is red (detected) when the real value exceeds the band
+and grey (null-like) when it falls inside. In panel B the band widens at
+the largest separation, where the groups become visible in the margins
 themselves and the margin-preserving null reproduces them, so the point
 reads null-like.
 
@@ -127,9 +123,8 @@ contain a small number of latent “types.” Running the test across all
 fourteen `mclust` covariance parameterizations, on several public Big
 Five and HEXACO datasets, gives the specification curve below.
 
-![Selected number of types across all fourteen mclust covariance models
-(steps), against the null band the twins produce (grey). The median
-verdict is null-like in every dataset.](figures/spec_curve.png)
+![Selected number of types across fourteen mclust models, against the
+null band](figures/spec_curve.png)
 
 Selected number of types across all fourteen mclust covariance models
 (steps), against the null band the twins produce (grey). The median
@@ -152,9 +147,8 @@ whether a construct is better described as categorical (taxonic) or
 continuous (dimensional), with values below the midpoint favouring a
 dimensional structure.
 
-![Comparison Curve Fit Index by trait for NEO-120 and HEXACO. Values
-fall on the dimensional side of the midpoint
-throughout.](figures/ccfi.png)
+![Comparison Curve Fit Index by trait for NEO-120 and
+HEXACO](figures/ccfi.png)
 
 Comparison Curve Fit Index by trait for NEO-120 and HEXACO. Values fall
 on the dimensional side of the midpoint throughout.
@@ -197,10 +191,56 @@ null to reveal its groups. Inspect the margins for pronounced
 multimodality before relying on the count test, and tie-break granular
 Likert-type scales before formal unimodality tests.
 
-## Reference
+## Related approaches
+
+Testing a clustering result against a reference distribution is an old
+idea, and the choice of reference is what separates the methods.
+
+The gap statistic (Tibshirani, Walther, and Hastie, 2001) compares the
+observed within-cluster dispersion to a uniform or PCA-aligned
+reference, which ignores the correlation structure of the data. SigClust
+(Liu, Hayes, Nobel, and Marron, 2008) tests a single two-way split
+against a single Gaussian null. Neither preserves the marginal
+distributions, which matters for the skewed and granular scales common
+in questionnaire data.
+
+The closest relative is UNPaC (Helgeson, Vock, and Bair, 2021), which
+also builds its reference with a Gaussian copula. Two things differ.
+UNPaC’s reference is *ortho-unimodal*: the margins are smoothed by
+kernel density estimation and made unimodal, so a bimodal variable
+counts as evidence for clustering. `matchednull` reuses the observed
+values, so the margins of the twin are identical to the real ones and
+marginal shape is conceded to the null. The test is therefore the more
+conservative of the two, and it answers a narrower question: is there
+cluster structure *beyond* what the margins and correlations already
+imply. UNPaC also compares a fixed cluster index, while
+[`matched_null_test()`](https://haomeng797-ship-it.github.io/matchednull/reference/matched_null_test.md)
+compares whatever scalar the user’s own pipeline returns, which is what
+allows a published typology’s exact workflow to be tested as it was
+actually run.
+
+The two are complements rather than substitutes. A result that clears
+the unimodal reference of UNPaC and the margin-preserving reference here
+is supported by both readings.
+
+## References
 
 The method, its positive controls, and its false-positive calibration
 are described in the accompanying paper, *Types Without Taxa: A
 Covariance-Matched-Null Multiverse Test of Categorical versus Continuous
 Personality Structure* (Meng, 2026; preregistration:
 <https://doi.org/10.17605/OSF.IO/2EKCG>).
+
+Helgeson, E. S., Vock, D. M., and Bair, E. (2021). Nonparametric cluster
+significance testing with reference to a unimodal null distribution.
+*Biometrics*, 77(4), 1215-1226. <https://doi.org/10.1111/biom.13376>
+
+Liu, Y., Hayes, D. N., Nobel, A., and Marron, J. S. (2008). Statistical
+significance of clustering for high-dimension, low-sample size data.
+*Journal of the American Statistical Association*, 103(483), 1281-1293.
+<https://doi.org/10.1198/016214508000000454>
+
+Tibshirani, R., Walther, G., and Hastie, T. (2001). Estimating the
+number of clusters in a data set via the gap statistic. *Journal of the
+Royal Statistical Society Series B*, 63(2), 411-423.
+<https://doi.org/10.1111/1467-9868.00293>

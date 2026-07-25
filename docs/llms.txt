@@ -19,16 +19,20 @@ the null twins, that’s evidence of genuine cluster structure. Otherwise,
 you’ll know before a reviewer asks.
 
 ![Positive controls: the test detects real types and stays quiet on
-typeless data](reference/figures/positive_control.png)
+typeless
+data](reference/figures/positive_control.png#gh-light-mode-only)![Positive
+controls: the test detects real types and stays quiet on typeless
+data](reference/figures/positive_control_dark.png#gh-dark-mode-only)
 
-*Positive controls. The grey shaded band is the matched null’s 95%
-interval: a point is red (detected) when the real number of clusters
-exceeds the band, grey (null-like) when it falls inside. The test
-detects real types whether they live only in the correlation structure
-(left) or in well-separated means (right). In the right panel the band
-widens at the largest separation, where the groups grow far enough apart
-to surface in the margins themselves and the margin-preserving null
-reproduces them.*
+*Positive controls. Signal strength is the within-component correlation
+in panel A and the separation between means, in standard deviations, in
+panel B. The grey shaded band is the matched null’s 95% interval: a
+point is red (detected) when the real number of clusters exceeds the
+band, grey (null-like) when it falls inside. The test finds real types
+whether they live only in the correlation structure (A) or in
+well-separated means (B). In panel B the band widens at the largest
+separation, where the groups grow far enough apart to surface in the
+margins themselves and the margin-preserving null reproduces them.*
 
 [`copula_null()`](https://haomeng797-ship-it.github.io/matchednull/reference/copula_null.md)
 generates the null twins, preserving every marginal distribution exactly
