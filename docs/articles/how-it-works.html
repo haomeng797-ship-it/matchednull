@@ -186,27 +186,25 @@ model.</p>
 <h2 id="positive-controls-sensitivity-to-genuine-types">Positive controls: sensitivity to genuine types<a class="anchor" aria-label="anchor" href="#positive-controls-sensitivity-to-genuine-types"></a>
 </h2>
 <p>A test that never fires is worthless: it must stay quiet on typeless
-data <em>and</em> fire when genuine types are present. The two panels
-below plant real types of two kinds and raise the signal strength.</p>
-<figure><img src="figures/positive_control.png" class="fig-light" width="100%" alt="Positive controls: the test detects planted types and stays quiet on typeless data"><img src="figures/positive_control_dark.png" class="fig-dark" width="100%" alt="Positive controls: the test detects planted types and stays quiet on typeless data"><figcaption>
-Positive controls. Signal strength is the within-component correlation
-in panel A and the separation between means, in standard deviations, in
-panel B. The grey shaded band is the 95% interval of the matched-null
-median k: a point is red (detected) when the real value exceeds the band
-and grey (null-like) when it falls inside. In panel B the band widens at
-the largest separation, where the groups become visible in the margins
-themselves and the margin-preserving null reproduces them, so the point
-reads null-like.
-</figcaption></figure><p>In the left panel the types share identical margins and differ only
-in the <em>orientation</em> of their within-group correlations. A single
+data <em>and</em> fire when genuine types are present. <a href="#fig-positive-control">Figure 1</a> plants real types of two kinds
+and raises the signal strength.</p>
+<figure id="fig-positive-control"><img src="figures/positive_control.png" class="fig-light" width="100%" alt="Positive controls: the test detects planted types and stays quiet on typeless data"><img src="figures/positive_control_dark.png" class="fig-dark" width="100%" alt="Positive controls: the test detects planted types and stays quiet on typeless data"><figcaption><strong>Figure 1.</strong> Positive controls. Signal strength is the
+within-component correlation in panel A and the separation between
+means, in standard deviations, in panel B. The grey shaded band is the
+95% interval of the matched-null median k: a point is red (detected)
+when the real value exceeds the band and grey (null-like) when it falls
+inside. In panel B the band widens at the largest separation, where the
+groups become visible in the margins themselves and the
+margin-preserving null reproduces them, so the point reads null-like.
+</figcaption></figure><p>In panel A the types share identical margins and differ only in the
+<em>orientation</em> of their within-group correlations. A single
 Gaussian copula has one correlation matrix and cannot reproduce two, so
 as the within-group correlation grows the test fires. This is the regime
 that ordinary mean-comparison and marginal tests miss entirely: the
 groups are invisible one variable at a time and appear only in the joint
-dependence. In the right panel the types are separated in their means in
-the familiar way, and the test again fires as the separation grows.
-Where there is structure the matched null cannot carry, the test finds
-it.</p>
+dependence. In panel B the types are separated in their means in the
+familiar way, and the test again fires as the separation grows. Where
+there is structure the matched null cannot carry, the test finds it.</p>
 </div>
 <div class="section level2">
 <h2 id="empirical-application-personality-inventories">Empirical application: personality inventories<a class="anchor" aria-label="anchor" href="#empirical-application-personality-inventories"></a>
@@ -214,12 +212,10 @@ it.</p>
 <p>The motivating application is the claim that personality inventories
 contain a small number of latent “types.” Running the test across all
 fourteen <code>mclust</code> covariance parameterizations, on several
-public Big Five and HEXACO datasets, gives the specification curve
-below.</p>
-<figure><img src="figures/spec_curve.png" class="fig-light" width="100%" alt="Selected number of types across fourteen mclust models, against the null band"><img src="figures/spec_curve_dark.png" class="fig-dark" width="100%" alt="Selected number of types across fourteen mclust models, against the null band"><figcaption>
-Selected number of types across all fourteen mclust covariance models
-(steps), against the null band the twins produce (grey). The median
-verdict is null-like in every dataset.
+public Big Five and HEXACO datasets, gives the specification curve in <a href="#fig-spec-curve">Figure 2</a>.</p>
+<figure id="fig-spec-curve"><img src="figures/spec_curve.png" class="fig-light" width="100%" alt="Selected number of types across fourteen mclust models, against the null band"><img src="figures/spec_curve_dark.png" class="fig-dark" width="100%" alt="Selected number of types across fourteen mclust models, against the null band"><figcaption><strong>Figure 2.</strong> Selected number of types across all fourteen
+mclust covariance models (steps), against the null band the twins
+produce (grey). The median verdict is null-like in every dataset.
 </figcaption></figure><p>The number of types the pipeline selects (the step function) sits
 inside the band the twins produce (grey) for the great majority of
 specifications, and the median verdict is null-like in every dataset.
@@ -237,9 +233,9 @@ Comparison Curve Fit Index (CCFI) from taxometric analysis scores
 whether a construct is better described as categorical (taxonic) or
 continuous (dimensional), with values below the midpoint favouring a
 dimensional structure.</p>
-<figure><img src="figures/ccfi.png" class="fig-light" width="100%" alt="Comparison Curve Fit Index by trait for NEO-120 and HEXACO"><img src="figures/ccfi_dark.png" class="fig-dark" width="100%" alt="Comparison Curve Fit Index by trait for NEO-120 and HEXACO"><figcaption>
-Comparison Curve Fit Index by trait for NEO-120 and HEXACO. Values fall
-on the dimensional side of the midpoint throughout.
+<figure id="fig-ccfi"><img src="figures/ccfi.png" class="fig-light" width="100%" alt="Comparison Curve Fit Index by trait for NEO-120 and HEXACO"><img src="figures/ccfi_dark.png" class="fig-dark" width="100%" alt="Comparison Curve Fit Index by trait for NEO-120 and HEXACO"><figcaption><strong>Figure 3.</strong> Comparison Curve Fit Index by trait for
+NEO-120 and HEXACO. Values fall on the dimensional side of the midpoint
+throughout.
 </figcaption></figure><p>Every trait, in both inventories, falls on the dimensional side. Two
 methodological traditions that rarely meet, mixture-model cluster
 counting and taxometrics, return the same verdict, which is reassuring
@@ -267,12 +263,12 @@ is sharper than a single null could give.</p>
 <div class="section level2">
 <h2 id="what-the-test-declines-to-answer">What the test declines to answer<a class="anchor" aria-label="anchor" href="#what-the-test-declines-to-answer"></a>
 </h2>
-<p>Look again at the right panel of the positive-control figure. The
-test detects the planted types at 1.5 and at 2 standard deviations of
-separation, and then, at 3 standard deviations, where the types are
-further apart than anywhere else in the figure, it goes quiet. Read as a
-power curve that is backwards. It cost me some time to be sure it was
-not a bug.</p>
+<p>Go back to panel B of <a href="#fig-positive-control">Figure 1</a>,
+the one where the types are separated in their means. The test detects
+them at 1.5 and at 2 standard deviations of separation, and then, at 3
+standard deviations, where the types are further apart than anywhere
+else in the figure, it goes quiet. Read as a power curve that is
+backwards. It cost me some time to be sure it was not a bug.</p>
 <p>It is not, and the reason is the construction. At 3 standard
 deviations each variable is visibly bimodal on its own. The twin copies
 the observed values, so it copies that bimodal margin, and a bimodal
