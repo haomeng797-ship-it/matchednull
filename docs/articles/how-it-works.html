@@ -102,52 +102,43 @@ but no types, have produced the same answer?</strong></p>
 </h2>
 <p>We want a reference dataset that matches the real one in every
 respect that is <em>not</em> in question, and is empty of the one thing
-that is. Two features are not in question and must be preserved:</p>
-<ul>
-<li>every variable’s marginal distribution (its skew, its bounds, its
-lumps at round numbers on a Likert scale);</li>
-<li>the correlations among variables.</li>
-</ul>
-<p>The feature in question, latent groups, must be absent by
-construction.</p>
-<p>A Gaussian copula does exactly this. Write the data as columns
+that is. Two things are not in question: every variable’s marginal
+distribution, with its skew, its bounds and its lumps at round numbers
+on a Likert scale, and the correlations among variables. Latent groups,
+the thing in question, must be absent by construction.</p>
+<p>By Sklar’s theorem that separation is always available: any joint
+distribution factors into its own margins and a copula carrying the
+dependence between them. Here the margins are taken from the real data
+and the copula is Gaussian.</p>
+<p>Write the data as columns
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>X</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">X_1, \dots, X_p</annotation></semantics></math>
-with empirical marginal distributions
+with empirical margins
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>F</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">F_1, \dots, F_p</annotation></semantics></math>
 and correlation matrix
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>.
-The null twin
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
-is built in two steps:</p>
-<ol style="list-style-type: decimal">
-<li>draw
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>∼</mo><mi>𝒩</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Z \sim \mathcal{N}(0, \Omega)</annotation></semantics></math>,
-where
+Draw
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>∼</mo><mi>𝒩</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Z \sim \mathcal{N}(0, \Omega)</annotation></semantics></math>
+with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math>
-is chosen so that the induced correlations match
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>;</li>
-<li>push each column back through its own empirical quantile function,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>j</mi></msub><mo>=</mo><msubsup><mi>F</mi><mi>j</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mspace width="-0.167em"></mspace><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>Z</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)</annotation></semantics></math>,
-which reuses the observed values of variable
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>.</li>
-</ol>
-<p>By Sklar’s theorem the joint law of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
-is the Gaussian copula with margins
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mi>j</mi></msub><annotation encoding="application/x-tex">F_j</annotation></semantics></math>.
-Three things follow. Each
+tuned so the induced correlations match
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>,
+then send each column back through its own empirical quantile function,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>j</mi></msub><mo>=</mo><msubsup><mi>F</mi><mi>j</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mspace width="-0.167em"></mspace><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>Z</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)</annotation></semantics></math>.
+Read from the inside out, that asks which percentile the Gaussian draw
+sits at and returns the real data value at that percentile.</p>
+<p>Three properties carry the argument. Each
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>j</mi></msub><annotation encoding="application/x-tex">Y_j</annotation></semantics></math>
 has <em>exactly</em> the empirical distribution of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mi>j</mi></msub><annotation encoding="application/x-tex">X_j</annotation></semantics></math>:
-the twin is a reshuffling of the real values, so no marginal test can
-tell them apart. The correlation matrix of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mi>j</mi></msub><annotation encoding="application/x-tex">X_j</annotation></semantics></math>,
+since the twin reshuffles observed values and invents none, so no
+marginal test can separate the two. The correlation matrix of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
-equals
+matches
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>
 to within sampling error. And the joint density is unimodal, with no
 islands or gaps, so <strong>the twin contains no cluster structure by
-construction</strong>. Any clusters your pipeline reports on the twin
-are therefore manufactured by the pipeline, not carried by the data.</p>
+construction</strong>. Whatever your pipeline reports on it was
+manufactured by the pipeline.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haomeng797-ship-it.github.io/matchednull/">matchednull</a></span><span class="op">)</span></span>
 <span></span>

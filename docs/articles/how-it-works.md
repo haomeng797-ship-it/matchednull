@@ -19,34 +19,31 @@ no types, have produced the same answer?**
 
 We want a reference dataset that matches the real one in every respect
 that is *not* in question, and is empty of the one thing that is. Two
-features are not in question and must be preserved:
+things are not in question: every variable’s marginal distribution, with
+its skew, its bounds and its lumps at round numbers on a Likert scale,
+and the correlations among variables. Latent groups, the thing in
+question, must be absent by construction.
 
-- every variable’s marginal distribution (its skew, its bounds, its
-  lumps at round numbers on a Likert scale);
-- the correlations among variables.
+By Sklar’s theorem that separation is always available: any joint
+distribution factors into its own margins and a copula carrying the
+dependence between them. Here the margins are taken from the real data
+and the copula is Gaussian.
 
-The feature in question, latent groups, must be absent by construction.
+Write the data as columns $`X_1, \dots, X_p`$ with empirical margins
+$`F_1, \dots, F_p`$ and correlation matrix $`R`$. Draw
+$`Z \sim \mathcal{N}(0, \Omega)`$ with $`\Omega`$ tuned so the induced
+correlations match $`R`$, then send each column back through its own
+empirical quantile function, $`Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)`$.
+Read from the inside out, that asks which percentile the Gaussian draw
+sits at and returns the real data value at that percentile.
 
-A Gaussian copula does exactly this. Write the data as columns
-$`X_1, \dots, X_p`$ with empirical marginal distributions
-$`F_1, \dots, F_p`$ and correlation matrix $`R`$. The null twin $`Y`$ is
-built in two steps:
-
-1.  draw $`Z \sim \mathcal{N}(0, \Omega)`$, where $`\Omega`$ is chosen
-    so that the induced correlations match $`R`$;
-2.  push each column back through its own empirical quantile function,
-    $`Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)`$, which reuses the observed
-    values of variable $`j`$.
-
-By Sklar’s theorem the joint law of $`Y`$ is the Gaussian copula with
-margins $`F_j`$. Three things follow. Each $`Y_j`$ has *exactly* the
-empirical distribution of $`X_j`$: the twin is a reshuffling of the real
-values, so no marginal test can tell them apart. The correlation matrix
-of $`Y`$ equals $`R`$ to within sampling error. And the joint density is
-unimodal, with no islands or gaps, so **the twin contains no cluster
-structure by construction**. Any clusters your pipeline reports on the
-twin are therefore manufactured by the pipeline, not carried by the
-data.
+Three properties carry the argument. Each $`Y_j`$ has *exactly* the
+empirical distribution of $`X_j`$, since the twin reshuffles observed
+values and invents none, so no marginal test can separate the two. The
+correlation matrix of $`Y`$ matches $`R`$ to within sampling error. And
+the joint density is unimodal, with no islands or gaps, so **the twin
+contains no cluster structure by construction**. Whatever your pipeline
+reports on it was manufactured by the pipeline.
 
 ``` r
 
