@@ -118,6 +118,14 @@ is hard to attribute to tails; a result the t twins reproduce was tail
 dependence, not types. Either way the verdict is sharper than what a single
 null could give.
 
+## Going further
+
+Why the construction works, what the positive controls show, how the method
+relates to earlier reference-distribution tests, and the one regime where the
+test declines to answer are all worked through in the
+[How it works](https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.html)
+article on the package website, which is kept current between releases.
+
 ## Reference
 
 The method, its positive controls, and its false-positive calibration are
