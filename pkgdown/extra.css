@@ -60,46 +60,9 @@
 [data-bs-theme="dark"] .fig-light { display: none; }
 [data-bs-theme="dark"] .fig-dark  { display: block; }
 
-/* [3] Figures that exist only as a light rendering, because they come from the
-   manuscript and cannot be regenerated. Present the white as a deliberate
-   paper card rather than a raw slab. */
-.fig-paper { margin: 1.5rem 0; }
-.fig-paper img {
-  display: block;
-  margin-inline: auto;
-  max-width: 100%;
-  height: auto;
-  padding: 12px;
-  border: 1px solid #d0d7de;   /* GitHub-light border token */
-  border-radius: 6px;          /* = Bootstrap --bs-border-radius, matches code blocks */
-  background: #ffffff;
-}
-
-/* Dark mode: knock the paper back from #ffffff to #ededed and seat it on the
-   page with an elevation shadow.
-   background:#ffffff and filter:brightness(.93) on the SAME element is
-   deliberate, not an oversight. CSS filter applies to an element's own
-   background and padding as well as its content, so 255 * 0.93 = 237 for both:
-   the 12px pad and the plot's own white margin both render #ededed and there
-   is no seam. (Putting #ededed on a wrapper and the filter on the img instead
-   produces a visible 7% seam.) Contrast against the #0d1117 page falls from
-   18.9:1 to 16.3:1, which takes the glare off without visibly greying the
-   plot, and black plot ink is untouched because 0 * 0.93 = 0.
-   The border goes transparent and a low-alpha light ring replaces it: a dark
-   1px border on a light card is closer in luminance to the page than to the
-   card, so it just thickens the edge and reads as a printing artifact. */
-[data-bs-theme="dark"] .fig-paper img {
-  border-color: transparent;
-  filter: brightness(0.93);
-  box-shadow:
-    0 0 0 1px rgb(240 246 252 / 10%),   /* GitHub-dark overlay border */
-    0 8px 24px rgb(1 4 9 / 75%);        /* GitHub-dark large elevation */
-}
-
 /* [4] Captions of hand-written <figure> blocks, to match pkgdown's own
    .caption sizing. The card is on the <img>, not the <figure>, so captions
    stay on the page background in both themes and need no colour override. */
-.fig-paper figcaption,
 figure > figcaption {
   font-size: 0.9rem;
   opacity: 0.85;

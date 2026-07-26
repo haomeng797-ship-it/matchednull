@@ -124,7 +124,9 @@ fourteen `mclust` covariance parameterizations, on several public Big
 Five and HEXACO datasets, gives the specification curve below.
 
 ![Selected number of types across fourteen mclust models, against the
-null band](figures/spec_curve.png)
+null band](figures/spec_curve.png)![Selected number of types across
+fourteen mclust models, against the null
+band](figures/spec_curve_dark.png)
 
 Selected number of types across all fourteen mclust covariance models
 (steps), against the null band the twins produce (grey). The median
@@ -148,7 +150,8 @@ continuous (dimensional), with values below the midpoint favouring a
 dimensional structure.
 
 ![Comparison Curve Fit Index by trait for NEO-120 and
-HEXACO](figures/ccfi.png)
+HEXACO](figures/ccfi.png)![Comparison Curve Fit Index by trait for
+NEO-120 and HEXACO](figures/ccfi_dark.png)
 
 Comparison Curve Fit Index by trait for NEO-120 and HEXACO. Values fall
 on the dimensional side of the midpoint throughout.
