@@ -115,13 +115,13 @@ and the copula is Gaussian.</p>
 with empirical margins
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>F</mi><mi>p</mi></msub></mrow><annotation encoding="application/x-tex">F_1, \dots, F_p</annotation></semantics></math>
 and correlation matrix
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>.
 Draw
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>∼</mo><mi>𝒩</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Z \sim \mathcal{N}(0, \Omega)</annotation></semantics></math>
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math>
 tuned so the induced correlations match
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>,
 then send each column back through its own empirical quantile function,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>j</mi></msub><mo>=</mo><msubsup><mi>F</mi><mi>j</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mspace width="-0.167em"></mspace><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>Z</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)</annotation></semantics></math>.
 Read from the inside out, that asks which percentile the Gaussian draw
@@ -134,11 +134,18 @@ since the twin reshuffles observed values and invents none, so no
 marginal test can separate the two. The correlation matrix of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
 matches
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>
-to within sampling error. And the joint density is unimodal, with no
-islands or gaps, so <strong>the twin contains no cluster structure by
-construction</strong>. Whatever your pipeline reports on it was
-manufactured by the pipeline.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+to within sampling error. And the copula contributes no clustering of
+its own: the Gaussian dependence is smooth, with no islands or gaps, so
+<strong>as long as each margin is itself unimodal the twin contains no
+cluster structure by construction</strong>. That qualifier is doing real
+work and is not boilerplate. A margin that is already multimodal is
+copied into the twin along with everything else, and it can carry groups
+in on its own; the section <a href="#what-the-test-declines-to-answer">What the test declines to
+answer</a> is about exactly that case. Outside it, whatever your
+pipeline reports on the twin was manufactured by the pipeline.</p>
+<p>Both claims are cheap to check, so the block below is run and its
+output shown.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haomeng797-ship-it.github.io/matchednull/">matchednull</a></span><span class="op">)</span></span>
 <span></span>
@@ -148,7 +155,12 @@ manufactured by the pipeline.</p>
 <span></span>
 <span><span class="va">twin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copula_null.html">copula_null</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">twin</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>   <span class="co"># margins: identical</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">twin</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>           <span class="co"># correlations: close</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">twin</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>           <span class="co"># correlations: close</span></span>
+<span><span class="co">#&gt;      [,1]  [,2]  [,3]</span></span>
+<span><span class="co">#&gt; [1,] 0.00  0.01  0.05</span></span>
+<span><span class="co">#&gt; [2,] 0.01  0.00 -0.03</span></span>
+<span><span class="co">#&gt; [3,] 0.05 -0.03  0.00</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="the-test-statistic">The test statistic<a class="anchor" aria-label="anchor" href="#the-test-statistic"></a>
@@ -193,9 +205,7 @@ within-component correlation in panel A and the separation between
 means, in standard deviations, in panel B. The grey shaded band is the
 95% interval of the matched-null median k: a point is red (detected)
 when the real value exceeds the band and grey (null-like) when it falls
-inside. In panel B the band widens at the largest separation, where the
-groups become visible in the margins themselves and the
-margin-preserving null reproduces them, so the point reads null-like.
+inside.
 </figcaption></figure><p>In panel A the types share identical margins and differ only in the
 <em>orientation</em> of their within-group correlations. A single
 Gaussian copula has one correlation matrix and cannot reproduce two, so
@@ -203,8 +213,12 @@ as the within-group correlation grows the test fires. This is the regime
 that ordinary mean-comparison and marginal tests miss entirely: the
 groups are invisible one variable at a time and appear only in the joint
 dependence. In panel B the types are separated in their means in the
-familiar way, and the test again fires as the separation grows. Where
-there is structure the matched null cannot carry, the test finds it.</p>
+familiar way, and the test fires there too as the separation grows, up
+to a point. At the largest separation it stops firing, which is not what
+a power curve is supposed to do, and that reversal is worth an
+explanation of its own; it gets one in <a href="#what-the-test-declines-to-answer">What the test declines to
+answer</a>. Setting that case aside for now, where there is structure
+the matched null cannot carry, the test finds it.</p>
 </div>
 <div class="section level2">
 <h2 id="empirical-application-personality-inventories">Empirical application: personality inventories<a class="anchor" aria-label="anchor" href="#empirical-application-personality-inventories"></a>
@@ -263,38 +277,58 @@ is sharper than a single null could give.</p>
 <div class="section level2">
 <h2 id="what-the-test-declines-to-answer">What the test declines to answer<a class="anchor" aria-label="anchor" href="#what-the-test-declines-to-answer"></a>
 </h2>
+<p>The t-copula check guards one way of misreading a verdict: the test
+fires, and what pushed it past the Gaussian twins was heavy tails, with
+no types involved. There is a second way, running in the opposite
+direction, where the test stays quiet even though real groups are
+present. It shows up inside the positive controls, which is the most
+awkward place for it to appear.</p>
 <p>Go back to panel B of <a href="#fig-positive-control">Figure 1</a>,
 the one where the types are separated in their means. The test detects
 them at 1.5 and at 2 standard deviations of separation, and then, at 3
 standard deviations, where the types are further apart than anywhere
-else in the figure, it goes quiet. Read as a power curve that is
-backwards. It cost me some time to be sure it was not a bug.</p>
-<p>It is not, and the reason is the construction. At 3 standard
-deviations each variable is visibly bimodal on its own. The twin copies
-the observed values, so it copies that bimodal margin, and a bimodal
-margin is enough to produce two components. The twin reports two
-clusters as well, the real value no longer stands out, and the verdict
-is null-like on a structure that is genuinely there.</p>
-<p>Calling this a feature is too easy, so here is the honest version. It
-follows from a choice, and the choice could have gone the other way.
-Preserving the observed margins exactly means conceding marginal shape
-to the null: whatever a single variable already displays becomes part of
-the reference, so it can never count as evidence. A null that forced its
-margins to be unimodal would call the same data clustered, and under its
-own hypothesis it would be right. Two tests, two claims.</p>
-<p>The question this one actually settles is narrower than “are there
-types.” It is <em>whether there is cluster structure beyond what the
-margins and correlations already imply.</em> Most of the time that is
-the question worth asking, since contested typologies rarely live in the
-margins. A variable that is plainly two-humped needs no copula null to
-reveal its groups; a histogram does it. Panel A is where the test earns
-its keep: every margin looks ordinary and the groups exist only in the
-joint dependence.</p>
-<p>None of this yields a fix, only a habit. Inspect the margins for
-pronounced multimodality before you rely on the count test, and
-tie-break granular Likert-type scales before running formal unimodality
-tests. If a margin is visibly two-humped, this test is the wrong
-instrument and will tell you nothing.</p>
+else in the figure, it goes quiet. Plotted as a power curve, it runs the
+wrong way. It cost me some time to be sure it was not a bug.</p>
+<p>Follow the construction out to that end of the scale and the
+behaviour stops looking strange. By 3 standard deviations the two groups
+no longer hide in the joint dependence: each variable, taken by itself,
+has become visibly bimodal. The twin copies the observed values of every
+variable, so it copies that bimodal margin intact. And a bimodal margin
+is on its own enough to produce two components, with no help from the
+dependence structure at all. So the twin reports two clusters as well,
+the real value no longer stands out against the twins, and the verdict
+comes back null-like on a structure that is genuinely there. This is the
+case the qualifier in <a href="#constructing-the-matched-null">Constructing the matched null</a>
+was pointing at.</p>
+<p>It would be convenient to stop there and file the whole thing under
+expected behaviour, except that doing so skips the part worth examining,
+which is that the boundary follows from a choice, and the choice could
+have gone the other way. Preserving the observed margins exactly means
+conceding marginal shape to the null: whatever a single variable already
+displays becomes part of the reference, so it can never count as
+evidence. UNPaC (Helgeson, Vock, and Bair, 2021) makes the opposite
+choice, smoothing its margins to unimodality before building the
+reference, and on these same data it would report clustering.
+<strong>Under its own hypothesis it would be right to. Those are two
+different tests answering two different claims, and neither is a
+corrected version of the other.</strong></p>
+<p>What this narrows down to is a question smaller than “are there
+types,” and it is the same question the opening of this article already
+asked: <em>would a dataset with the same margins and the same
+correlations, but no types, have produced this answer?</em> Most of the
+time that smaller question is the one worth asking, since contested
+typologies rarely live in the margins to begin with. A variable that is
+plainly two-humped needs no copula null to reveal its groups; a
+histogram does it. Panel A is where the test earns its keep, because
+there every margin looks ordinary and the groups exist only in the joint
+dependence.</p>
+<p>Since there is nothing here to repair, what the boundary leaves
+behind is a working habit. Inspect the margins for pronounced
+multimodality before you rely on the count test, and tie-break granular
+Likert-type scales before running formal unimodality tests. If a margin
+is visibly two-humped, this test is the wrong instrument for the
+question, and one of the methods in the next section may suit it
+better.</p>
 </div>
 <div class="section level2">
 <h2 id="related-approaches">Related approaches<a class="anchor" aria-label="anchor" href="#related-approaches"></a>
@@ -309,18 +343,14 @@ against a single Gaussian null. Neither preserves the marginal
 distributions, which matters for the skewed and granular scales common
 in questionnaire data.</p>
 <p>The closest relative is UNPaC (Helgeson, Vock, and Bair, 2021), which
-also builds its reference with a Gaussian copula. Two things differ.
-UNPaC’s reference is <em>ortho-unimodal</em>: the margins are smoothed
-by kernel density estimation and made unimodal, so a bimodal variable
-counts as evidence for clustering. <code>matchednull</code> reuses the
-observed values, so the margins of the twin are identical to the real
-ones and marginal shape is conceded to the null. The test is therefore
-the more conservative of the two, and it answers a narrower question: is
-there cluster structure <em>beyond</em> what the margins and
-correlations already imply. UNPaC also compares a fixed cluster index,
-while <code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> compares whatever scalar the
-user’s own pipeline returns, which is what allows a published typology’s
-exact workflow to be tested as it was actually run.</p>
+also builds its reference with a Gaussian copula. Its margins are the
+difference, as the previous section described: UNPaC smooths them to
+unimodality by kernel density estimation, so it keeps the power this
+test gives up. A second difference is in what gets compared. UNPaC
+evaluates a fixed cluster index, while <code><a href="../reference/matched_null_test.html">matched_null_test()</a></code>
+takes whatever scalar the user’s own pipeline returns, which is what
+allows a published typology’s exact workflow to be tested as it was
+actually run.</p>
 <p>They complement each other. A result that clears the unimodal
 reference of UNPaC and the margin-preserving reference here is supported
 on both readings.</p>
