@@ -5,6 +5,7 @@ status](https://www.r-pkg.org/badges/version/matchednull)](https://CRAN.R-projec
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Preregistration](https://img.shields.io/badge/OSF-prereg-337ab7.svg)](https://doi.org/10.17605/OSF.IO/2EKCG)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21610608.svg)](https://doi.org/10.5281/zenodo.21610608)
 
 Clustering methods will always give you clusters, even when the data are
 one smooth cloud. That makes it hard to know whether the reported
