@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+title: "matchednull: Matched-Null Tests for Cluster-Count Claims"
+message: "If you use this software, please cite both the software and the accompanying paper."
+type: software
+authors:
+  - given-names: Miura
+    family-names: Meng
+    email: meng10@upenn.edu
+    orcid: "https://orcid.org/0009-0004-1522-1997"
+    affiliation: "University of Pennsylvania"
+repository-code: "https://github.com/haomeng797-ship-it/matchednull"
+url: "https://haomeng797-ship-it.github.io/matchednull/"
+abstract: >-
+  Builds matched nulls for cluster-count claims: synthetic twins of a dataset
+  that preserve every marginal distribution and the full correlation matrix
+  while containing no cluster structure by construction. A reported number of
+  clusters or types can then be tested against what the data's own margins and
+  covariance already produce, using any clustering pipeline. A t-copula option
+  adds tail dependence to the null, so that an apparent excess of clusters can
+  be checked against a heavier-tailed alternative before it is read as evidence
+  of types.
+keywords:
+  - clustering
+  - copula
+  - null model
+  - mixture models
+  - psychometrics
+  - taxometrics
+  - R
+license: MIT
+version: 0.2.0
+references:
+  - type: article
+    title: "Types Without Taxa: A Covariance-Matched-Null Multiverse Test of Categorical versus Continuous Personality Structure"
+    authors:
+      - given-names: Miura
+        family-names: Meng
+        orcid: "https://orcid.org/0009-0004-1522-1997"
+    year: 2026
+    notes: "Manuscript under review. Preregistration: https://doi.org/10.17605/OSF.IO/2EKCG"
