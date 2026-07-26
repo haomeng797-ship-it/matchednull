@@ -10,14 +10,12 @@ template:
 
 navbar:
   structure:
-    left:  [intro, articles, reference, news]
+    left:  [intro, howitworks, reference, news]
     right: [search, github, lightswitch]
   components:
-    articles:
-      text: Articles
-      menu:
-      - text: "How the matched-null test works"
-        href: articles/how-it-works.html
+    howitworks:
+      text: How it works
+      href: articles/how-it-works.html
 
 reference:
 - title: Build a matched null

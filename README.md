@@ -26,10 +26,13 @@ panel A and the separation between means, in standard deviations, in panel B.
 The grey shaded band is the matched null's 95% interval: a point is red
 (detected) when the real number of clusters exceeds the band, grey (null-like)
 when it falls inside. The test finds real types whether they live only in the
-correlation structure (A) or in well-separated means (B). In panel B the band
-widens at the largest separation, where the groups grow far enough apart to
-surface in the margins themselves and the margin-preserving null reproduces
-them.*
+correlation structure (A) or in well-separated means (B).*
+
+One thing in that figure is worth a second look: in panel B the test stops
+firing at the largest separation, which is the opposite of what a power curve
+should do. [**How it works**](https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.html)
+follows the construction out to that point, explains what the test is declining
+to answer there, and shows the calibration behind the rest of the figure.
 
 `copula_null()` generates the null twins, preserving every marginal
 distribution exactly and the correlation matrix to within sampling error.
@@ -66,10 +69,7 @@ matched_null_test(x, pick_k, R = 50)
 ```
 
 See `vignette("matchednull")` for the full walk-through, including a case
-where genuine types hide in the dependence structure and the test fires. The
-[How it works](https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.html)
-article covers the null construction, the positive controls, and the
-false-positive calibration in more detail.
+where genuine types hide in the dependence structure and the test fires.
 
 In our calibration runs on skewed but clusterless data, standard criteria
 (BIC, the bootstrap LRT) reported structure in every dataset. The matched-null
