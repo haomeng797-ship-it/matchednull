@@ -274,17 +274,40 @@ twins reproduce was tail dependence, not types. Either way the verdict
 is sharper than a single null could give.</p>
 </div>
 <div class="section level2">
-<h2 id="a-boundary-case-separation-in-the-margins">A boundary case: separation in the margins<a class="anchor" aria-label="anchor" href="#a-boundary-case-separation-in-the-margins"></a>
+<h2 id="what-the-test-declines-to-answer">What the test declines to answer<a class="anchor" aria-label="anchor" href="#what-the-test-declines-to-answer"></a>
 </h2>
-<p>The one regime the null cannot flag is types so separated that the
-separation shows up in the margins themselves, turning a variable
-visibly bimodal. There the twin, which copies that bimodal margin,
-inherits the split and reports the same count, so the test stays quiet
-on a structure that is in fact real. This is a feature at the boundary
-rather than a defect: a variable that is plainly two-humped needs no
-null to reveal its groups. Inspect the margins for pronounced
-multimodality before relying on the count test, and tie-break granular
-Likert-type scales before formal unimodality tests.</p>
+<p>Look again at the right panel of the positive-control figure. The
+test detects the planted types at 1.5 and at 2 standard deviations of
+separation, and then, at 3 standard deviations, where the types are
+further apart than anywhere else in the figure, it goes quiet. Read as a
+power curve that is backwards. It cost me some time to be sure it was
+not a bug.</p>
+<p>It is not, and the reason is the construction. At 3 standard
+deviations each variable is visibly bimodal on its own. The twin copies
+the observed values, so it copies that bimodal margin, and a bimodal
+margin is enough to produce two components. The twin reports two
+clusters as well, the real value no longer stands out, and the verdict
+is null-like on a structure that is genuinely there.</p>
+<p>Calling this a feature is too easy, so here is the honest version. It
+follows from a choice, and the choice could have gone the other way.
+Preserving the observed margins exactly means conceding marginal shape
+to the null: whatever a single variable already displays becomes part of
+the reference, so it can never count as evidence. A null that forced its
+margins to be unimodal would call the same data clustered, and under its
+own hypothesis it would be right. Two tests, two claims.</p>
+<p>The question this one actually settles is narrower than “are there
+types.” It is <em>whether there is cluster structure beyond what the
+margins and correlations already imply.</em> Most of the time that is
+the question worth asking, since contested typologies rarely live in the
+margins. A variable that is plainly two-humped needs no copula null to
+reveal its groups; a histogram does it. Panel A is where the test earns
+its keep: every margin looks ordinary and the groups exist only in the
+joint dependence.</p>
+<p>None of this yields a fix, only a habit. Inspect the margins for
+pronounced multimodality before you rely on the count test, and
+tie-break granular Likert-type scales before running formal unimodality
+tests. If a margin is visibly two-humped, this test is the wrong
+instrument and will tell you nothing.</p>
 </div>
 <div class="section level2">
 <h2 id="related-approaches">Related approaches<a class="anchor" aria-label="anchor" href="#related-approaches"></a>
@@ -311,9 +334,9 @@ correlations already imply. UNPaC also compares a fixed cluster index,
 while <code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> compares whatever scalar the
 user’s own pipeline returns, which is what allows a published typology’s
 exact workflow to be tested as it was actually run.</p>
-<p>The two are complements rather than substitutes. A result that clears
-the unimodal reference of UNPaC and the margin-preserving reference here
-is supported by both readings.</p>
+<p>They complement each other. A result that clears the unimodal
+reference of UNPaC and the margin-preserving reference here is supported
+on both readings.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
