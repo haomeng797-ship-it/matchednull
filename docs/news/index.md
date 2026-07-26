@@ -1,6 +1,6 @@
 # Changelog
 
-## matchednull (development version)
+## matchednull 0.2.0
 
 - [`copula_null()`](https://haomeng797-ship-it.github.io/matchednull/reference/copula_null.md)
   and

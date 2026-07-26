@@ -1,4 +1,4 @@
-# matchednull (development version)
+# matchednull 0.2.0
 
 * `copula_null()` and `matched_null_test()` gain `copula = "t"` and `df`:
   t-copula twins preserve the same margins and correlations but add tail
