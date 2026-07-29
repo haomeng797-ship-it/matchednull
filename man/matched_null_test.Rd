@@ -11,7 +11,8 @@ matched_null_test(
   probs = c(0.025, 0.975),
   copula = c("gaussian", "t"),
   df = 8,
-  ridge = 1e-06
+  ridge = 1e-06,
+  parallel = FALSE
 )
 }
 \arguments{
@@ -30,6 +31,15 @@ the interval verdict (default \code{c(.025, .975)}).}
 passed to \code{\link[=copula_null]{copula_null()}}. Defaults to \code{"gaussian"}.}
 
 \item{ridge}{Passed to \code{\link[=copula_null]{copula_null()}}.}
+
+\item{parallel}{Evaluate the twin loop through \pkg{future.apply}, so that the
+backend is whatever \code{future::plan()} the caller has set. Because the twins
+are independent and the null construction itself is a negligible share of
+the cost, the speed-up is close to the cost of the user's own pipeline
+divided by the number of workers. Seeded results are reproducible and do
+not depend on how many workers run them. They do, however, differ from the
+\code{parallel = FALSE} stream, which is left byte-identical to earlier versions,
+so a seeded analysis should not switch settings partway through.}
 }
 \value{
 An object of class \code{"matched_null_test"}: a list with the real

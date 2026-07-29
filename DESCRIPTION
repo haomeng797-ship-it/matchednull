@@ -22,7 +22,9 @@ Suggests:
     mclust,
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    future.apply,
+    future
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://haomeng797-ship-it.github.io/matchednull/, https://github.com/haomeng797-ship-it/matchednull

@@ -25,6 +25,14 @@
 #' @param copula,df Dependence family of the twins and t degrees of freedom,
 #'   passed to [copula_null()]. Defaults to `"gaussian"`.
 #' @param ridge Passed to [copula_null()].
+#' @param parallel Evaluate the twin loop through \pkg{future.apply}, so that the
+#'   backend is whatever `future::plan()` the caller has set. Because the twins
+#'   are independent and the null construction itself is a negligible share of
+#'   the cost, the speed-up is close to the cost of the user's own pipeline
+#'   divided by the number of workers. Seeded results are reproducible and do
+#'   not depend on how many workers run them. They do, however, differ from the
+#'   `parallel = FALSE` stream, which is left byte-identical to earlier versions,
+#'   so a seeded analysis should not switch settings partway through.
 #'
 #' @return An object of class `"matched_null_test"`: a list with the real
 #'   statistic (`real`), the null draws (`null`), the null interval
@@ -51,19 +59,29 @@
 #' @export
 matched_null_test <- function(x, cluster_fn, R = 200, probs = c(.025, .975),
                               copula = c("gaussian", "t"), df = 8,
-                              ridge = 1e-6) {
+                              ridge = 1e-6, parallel = FALSE) {
   x <- as.matrix(x)
   copula <- match.arg(copula)
   if (!is.function(cluster_fn)) stop("`cluster_fn` must be a function.", call. = FALSE)
   if (!is.numeric(R) || length(R) != 1L || R < 1) stop("`R` must be a positive number.", call. = FALSE)
+  if (!is.logical(parallel) || length(parallel) != 1L || is.na(parallel))
+    stop("`parallel` must be TRUE or FALSE.", call. = FALSE)
 
   real <- as.numeric(cluster_fn(x))
   if (length(real) != 1L || is.na(real))
     stop("`cluster_fn` must return a single non-missing number.", call. = FALSE)
 
-  nulls <- vapply(seq_len(R), function(i) {
+  draw_one <- function(i) {
     as.numeric(cluster_fn(copula_null(x, copula = copula, df = df, ridge = ridge)))
-  }, numeric(1))
+  }
+
+  nulls <- if (parallel) {
+    if (!requireNamespace("future.apply", quietly = TRUE))
+      stop("`parallel = TRUE` requires the future.apply package.", call. = FALSE)
+    future.apply::future_vapply(seq_len(R), draw_one, numeric(1), future.seed = TRUE)
+  } else {
+    vapply(seq_len(R), draw_one, numeric(1))
+  }
 
   q <- stats::quantile(nulls, probs, na.rm = TRUE)
   out <- list(

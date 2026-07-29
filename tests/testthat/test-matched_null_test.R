@@ -16,6 +16,44 @@ test_that("bad input fails loudly", {
   expect_error(matched_null_test(x, cluster_fn = 5), "must be a function")
   expect_error(matched_null_test(x, function(d) c(1, 2), R = 5), "single non-missing")
   expect_error(matched_null_test(x, function(d) 1, R = 0), "positive")
+  expect_error(matched_null_test(x, function(d) 1, R = 5, parallel = NA), "TRUE or FALSE")
+})
+
+# A pipeline returning a continuous summary of the twin itself, so that two runs
+# agree only when they drew the same twins. A count statistic would be constant
+# on data this small and the comparisons below would pass vacuously.
+twin_summary <- function(d) sum(d[1:5, 1])
+
+test_that("parallel = TRUE is reproducible from a seed", {
+  skip_if_not_installed("future.apply")
+  set.seed(3)
+  x <- matrix(rnorm(60 * 3), 60, 3)
+
+  set.seed(11); a <- matched_null_test(x, twin_summary, R = 9, parallel = TRUE)$null
+  set.seed(11); b <- matched_null_test(x, twin_summary, R = 9, parallel = TRUE)$null
+
+  expect_equal(a, b)
+  expect_gt(stats::var(a), 0)          # the statistic really does vary
+})
+
+test_that("parallel results do not depend on the number of workers", {
+  skip_on_cran()
+  skip_if_not_installed("future.apply")
+  skip_if_not_installed("future")
+
+  old_plan <- future::plan()
+  on.exit(future::plan(old_plan), add = TRUE)
+
+  set.seed(3)
+  x <- matrix(rnorm(60 * 3), 60, 3)
+
+  future::plan(future::sequential)
+  set.seed(11); one <- matched_null_test(x, twin_summary, R = 9, parallel = TRUE)$null
+
+  future::plan(future::multisession, workers = 2)
+  set.seed(11); two <- matched_null_test(x, twin_summary, R = 9, parallel = TRUE)$null
+
+  expect_equal(one, two)
 })
 
 test_that("behaviour: quiet on typeless data, fires on dependence types", {
