@@ -13,7 +13,9 @@
 #' license types: heavy-tailed dependence also exceeds a Gaussian null. To
 #' separate the two, rerun with `copula = "t"` (df 8, then 3). A result that
 #' survives the t twins as well is harder to attribute to tails; a result the
-#' t twins reproduce was tail dependence, not types.
+#' t twins reproduce was tail dependence, not types. The Gaussian run remains
+#' the test, and a result quoted without its Gaussian verdict is not a
+#' matched-null result.
 #'
 #' @param x A numeric matrix or data frame, complete cases only.
 #' @param cluster_fn A function taking a data matrix and returning a single
@@ -23,7 +25,10 @@
 #' @param probs Lower and upper quantiles of the null distribution used for
 #'   the interval verdict (default `c(.025, .975)`).
 #' @param copula,df Dependence family of the twins and t degrees of freedom,
-#'   passed to [copula_null()]. Defaults to `"gaussian"`.
+#'   passed to [copula_null()]. Defaults to `"gaussian"`, which is the null of
+#'   the method; `copula = "t"` adds a second, tighter null rather than
+#'   substituting for it, and `df` is fixed by the caller, never estimated from
+#'   the data.
 #' @param ridge Passed to [copula_null()].
 #' @param parallel Evaluate the twin loop through \pkg{future.apply}, so that the
 #'   backend is whatever `future::plan()` the caller has set. Because the twins

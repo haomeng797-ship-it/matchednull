@@ -11,7 +11,9 @@ copula_null(x, copula = c("gaussian", "t"), df = 8, ridge = 1e-06)
 variables), complete cases only, at least two rows and two columns.}
 
 \item{copula}{Dependence family of the twin: \code{"gaussian"} (default) or
-\code{"t"}.}
+\code{"t"}. The Gaussian family is the null of the method; \code{"t"} supplies a
+second, deliberately blinded null for stress-testing an exceedance the
+Gaussian twins have already licensed, and does not replace it.}
 
 \item{df}{Degrees of freedom of the t copula, a single positive number
 (default 8; used only when \code{copula = "t"}). Smaller is heavier-tailed;

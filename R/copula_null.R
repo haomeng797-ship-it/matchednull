@@ -26,7 +26,9 @@
 #' @param x A numeric matrix or data frame (rows = observations, columns =
 #'   variables), complete cases only, at least two rows and two columns.
 #' @param copula Dependence family of the twin: `"gaussian"` (default) or
-#'   `"t"`.
+#'   `"t"`. The Gaussian family is the null of the method; `"t"` supplies a
+#'   second, deliberately blinded null for stress-testing an exceedance the
+#'   Gaussian twins have already licensed, and does not replace it.
 #' @param df Degrees of freedom of the t copula, a single positive number
 #'   (default 8; used only when `copula = "t"`). Smaller is heavier-tailed;
 #'   `df = 3` is a hard stress test, `df = 8` a moderate one.

@@ -28,7 +28,10 @@ clusters (but any scalar summary of clustering strength works).}
 the interval verdict (default \code{c(.025, .975)}).}
 
 \item{copula, df}{Dependence family of the twins and t degrees of freedom,
-passed to \code{\link[=copula_null]{copula_null()}}. Defaults to \code{"gaussian"}.}
+passed to \code{\link[=copula_null]{copula_null()}}. Defaults to \code{"gaussian"}, which is the null of
+the method; \code{copula = "t"} adds a second, tighter null rather than
+substituting for it, and \code{df} is fixed by the caller, never estimated from
+the data.}
 
 \item{ridge}{Passed to \code{\link[=copula_null]{copula_null()}}.}
 
@@ -64,7 +67,9 @@ only "structure beyond margins and correlations", it does not by itself
 license types: heavy-tailed dependence also exceeds a Gaussian null. To
 separate the two, rerun with \code{copula = "t"} (df 8, then 3). A result that
 survives the t twins as well is harder to attribute to tails; a result the
-t twins reproduce was tail dependence, not types.
+t twins reproduce was tail dependence, not types. The Gaussian run remains
+the test, and a result quoted without its Gaussian verdict is not a
+matched-null result.
 }
 \examples{
 \donttest{

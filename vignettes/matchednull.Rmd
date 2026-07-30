@@ -102,7 +102,7 @@ Two practical notes:
 ## Stress-testing an exceedance: heavier tails
 
 "Exceeds the null" under Gaussian twins licenses only *structure beyond
-margins and correlations* — not types. Heavy-tailed dependence, where extreme
+margins and correlations*, not types. Heavy-tailed dependence, where extreme
 values across variables arrive together, also exceeds a Gaussian null, and
 real questionnaire and clinical data are heavy-tailed more often than not. To
 separate the two readings, rerun the test with t-copula twins: same margins,
@@ -113,10 +113,23 @@ matched_null_test(x, pick_k, R = 200, copula = "t", df = 8)  # moderate tails
 matched_null_test(x, pick_k, R = 200, copula = "t", df = 3)  # heavy tails
 ```
 
+The Gaussian twins remain the test. A t copula could not take that role, since
+it would absorb into the null the tail structure the test is meant to detect,
+and that is exactly what makes it useful as a second, deliberately blinded
+null: an exceedance that survives twins which have already matched tail
+co-movement away cannot be attributed to tail co-movement. Run this rung only
+on an exceedance the Gaussian run has already licensed; if the Gaussian twins
+were not exceeded, the count is what margins and correlations alone produce and
+the question does not arise. `df` is set by you and never estimated from the
+data, and both values should be reported rather than the one that suits the
+conclusion. A result quoted without its Gaussian verdict is not a matched-null
+result.
+
 The ladder reads: a result that exceeds the Gaussian twins *and* the t twins
 is hard to attribute to tails; a result the t twins reproduce was tail
 dependence, not types. Either way the verdict is sharper than what a single
-null could give.
+null could give. Whether a surviving exceedance is *categorical* is a separate
+question, answered by the taxometric checks rather than by any null.
 
 ## Going further
 
