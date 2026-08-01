@@ -32,7 +32,7 @@ version: 0.2.0
 doi: "10.5281/zenodo.21610608"
 references:
   - type: article
-    title: "Types Without Taxa: A Covariance-Matched-Null Multiverse Test of Categorical versus Continuous Personality Structure"
+    title: "A Matched-Null Test of Whether the Clusters a Pipeline Reports Are Real, With an Application to Personality Types"
     authors:
       - given-names: Miura
         family-names: Meng
