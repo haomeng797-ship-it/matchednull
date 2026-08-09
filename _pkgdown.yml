@@ -10,12 +10,16 @@ template:
 
 navbar:
   structure:
-    left:  [intro, howitworks, reference, news]
+    left:  [intro, articles, reference, news]
     right: [search, github, lightswitch]
   components:
-    howitworks:
-      text: How it works
-      href: articles/how-it-works.html
+    articles:
+      text: Articles
+      menu:
+      - text: How the matched-null test works
+        href: articles/how-it-works.html
+      - text: Auditing a flexmix pipeline
+        href: articles/flexmix.html
 
 reference:
 - title: Build a matched null
@@ -37,3 +41,4 @@ articles:
   contents:
   - matchednull
   - articles/how-it-works
+  - articles/flexmix

@@ -36,7 +36,13 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/matchednull.html">Get started</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/how-it-works.html">How it works</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/how-it-works.html">How the matched-null test works</a></li>
+    <li><a class="dropdown-item" href="../articles/flexmix.html">Auditing a flexmix pipeline</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
@@ -183,7 +189,7 @@ tests.</li>
 <h2 id="stress-testing-an-exceedance-heavier-tails">Stress-testing an exceedance: heavier tails<a class="anchor" aria-label="anchor" href="#stress-testing-an-exceedance-heavier-tails"></a>
 </h2>
 <p>“Exceeds the null” under Gaussian twins licenses only <em>structure
-beyond margins and correlations</em> — not types. Heavy-tailed
+beyond margins and correlations</em>, not types. Heavy-tailed
 dependence, where extreme values across variables arrive together, also
 exceeds a Gaussian null, and real questionnaire and clinical data are
 heavy-tailed more often than not. To separate the two readings, rerun
@@ -192,10 +198,24 @@ that co-move.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matched_null_test.html">matched_null_test</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">pick_k</span>, R <span class="op">=</span> <span class="fl">200</span>, copula <span class="op">=</span> <span class="st">"t"</span>, df <span class="op">=</span> <span class="fl">8</span><span class="op">)</span>  <span class="co"># moderate tails</span></span>
 <span><span class="fu"><a href="../reference/matched_null_test.html">matched_null_test</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">pick_k</span>, R <span class="op">=</span> <span class="fl">200</span>, copula <span class="op">=</span> <span class="st">"t"</span>, df <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co"># heavy tails</span></span></code></pre></div>
+<p>The Gaussian twins remain the test. A t copula could not take that
+role, since it would absorb into the null the tail structure the test is
+meant to detect, and that is exactly what makes it useful as a second,
+deliberately blinded null: an exceedance that survives twins which have
+already matched tail co-movement away cannot be attributed to tail
+co-movement. Run this rung only on an exceedance the Gaussian run has
+already licensed; if the Gaussian twins were not exceeded, the count is
+what margins and correlations alone produce and the question does not
+arise. <code>df</code> is set by you and never estimated from the data,
+and both values should be reported rather than the one that suits the
+conclusion. A result quoted without its Gaussian verdict is not a
+matched-null result.</p>
 <p>The ladder reads: a result that exceeds the Gaussian twins
 <em>and</em> the t twins is hard to attribute to tails; a result the t
 twins reproduce was tail dependence, not types. Either way the verdict
-is sharper than what a single null could give.</p>
+is sharper than what a single null could give. Whether a surviving
+exceedance is <em>categorical</em> is a separate question, answered by
+the taxometric checks rather than by any null.</p>
 </div>
 <div class="section level2">
 <h2 id="going-further">Going further<a class="anchor" aria-label="anchor" href="#going-further"></a>

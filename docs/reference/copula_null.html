@@ -28,7 +28,11 @@ never more than the data's shape."><meta property="og:image" content="https://ha
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/matchednull.html">Get started</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/how-it-works.html">How it works</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/how-it-works.html">How the matched-null test works</a></li>
+    <li><a class="dropdown-item" href="../articles/flexmix.html">Auditing a flexmix pipeline</a></li>
+  </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -78,7 +82,9 @@ variables), complete cases only, at least two rows and two columns.</p></dd>
 
 <dt id="arg-copula">copula<a class="anchor" aria-label="anchor" href="#arg-copula"></a></dt>
 <dd><p>Dependence family of the twin: <code>"gaussian"</code> (default) or
-<code>"t"</code>.</p></dd>
+<code>"t"</code>. The Gaussian family is the null of the method; <code>"t"</code> supplies a
+second, deliberately blinded null for stress-testing an exceedance the
+Gaussian twins have already licensed, and does not replace it.</p></dd>
 
 
 <dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>

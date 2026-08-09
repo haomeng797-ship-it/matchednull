@@ -23,7 +23,10 @@ copula_null(x, copula = c("gaussian", "t"), df = 8, ridge = 1e-06)
 
 - copula:
 
-  Dependence family of the twin: `"gaussian"` (default) or `"t"`.
+  Dependence family of the twin: `"gaussian"` (default) or `"t"`. The
+  Gaussian family is the null of the method; `"t"` supplies a second,
+  deliberately blinded null for stress-testing an exceedance the
+  Gaussian twins have already licensed, and does not replace it.
 
 - df:
 

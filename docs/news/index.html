@@ -16,7 +16,11 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/matchednull.html">Get started</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/how-it-works.html">How it works</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/how-it-works.html">How the matched-null test works</a></li>
+    <li><a class="dropdown-item" href="../articles/flexmix.html">Auditing a flexmix pipeline</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -43,6 +47,8 @@
 <h2 class="pkg-version" data-toc-text="0.2.0" id="matchednull-020">matchednull 0.2.0<a class="anchor" aria-label="anchor" href="#matchednull-020"></a></h2>
 <ul><li>
 <code><a href="../reference/copula_null.html">copula_null()</a></code> and <code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> gain <code>copula = "t"</code> and <code>df</code>: t-copula twins preserve the same margins and correlations but add tail dependence. A verdict of “exceeds the Gaussian null” can now be stress-tested against heavier-tailed dependence (<code>df = 8</code>, then <code>3</code>) before it is read as evidence of types.</li>
+<li>
+<code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> gains <code>parallel</code>. With <code>parallel = TRUE</code> the twin loop runs through ‘future.apply’, so the backend is whatever <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> the caller has set. Seeded results are reproducible and independent of the number of workers. The default <code>parallel = FALSE</code> path is unchanged, so existing seeded analyses reproduce exactly.</li>
 <li>
 <code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> results record the null family used (<code>$copula</code>, <code>$df</code>), and the printed summary names it.</li>
 </ul></div>

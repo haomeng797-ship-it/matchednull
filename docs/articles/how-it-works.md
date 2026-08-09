@@ -176,15 +176,38 @@ methodological traditions that rarely meet, mixture-model cluster
 counting and taxometrics, return the same verdict, which is reassuring
 precisely because their assumptions differ.
 
-## Heavy-tailed alternatives: the t-copula null
+## A second, deliberately blinded null: the t-copula rung
 
-A verdict of *exceeds the Gaussian null* licenses only the conclusion
-that the data carry structure beyond their margins and correlations.
-That structure need not be types. Heavy-tailed dependence, where extreme
-values across variables tend to arrive together, also exceeds a Gaussian
-null, and real questionnaire and clinical data are heavy-tailed more
-often than not. To keep the two readings apart, rerun the test with
-t-copula twins: same margins, same correlations, but tails that co-move.
+The case for Gaussian minimality is made in full in the accompanying
+paper; this section takes it as given and asks what a second, tighter
+null adds.
+
+The Gaussian copula is *the* null for this test, and it holds that
+position on purpose. Its dependence is exhausted by the correlation
+matrix, and among all distributions with a given covariance the
+multivariate normal has maximum entropy, so the twin carries the least
+structured dependence consistent with the data’s margins and
+correlations. A richer copula cannot take that role: a t copula adds
+tail dependence, a vine copula fits almost any dependence structure at
+all, and either would absorb into the null the very structure the test
+is meant to detect.
+
+That absorption is what makes a t copula useful as a *second* null.
+Running one does not soften the test; it blinds the test, deliberately
+and in a known direction. An exceedance that survives a null which has
+already matched tail co-movement away cannot be attributed to tail
+co-movement. The Gaussian run remains the test. The t run is a follow-up
+question asked of an exceedance the Gaussian run has already licensed.
+
+The question is worth asking because the failure mode has been measured.
+On typeless data whose dependence is non-Gaussian, generated from a t
+copula carrying tail dependence over a correlation matrix taken from
+real personality data, the count test fires in 99 to 100 percent of
+samples across tail-dependence strengths, as the accompanying paper
+reports. Standard criteria behave no better on the same data.
+Heavy-tailed dependence is not a rare edge case in questionnaire and
+clinical data, so a verdict of *exceeds the Gaussian null* does not on
+its own separate tails from types.
 
 ``` r
 
@@ -192,10 +215,48 @@ matched_null_test(x, cluster_fn, R = 200, copula = "t", df = 8)  # moderate tail
 matched_null_test(x, cluster_fn, R = 200, copula = "t", df = 3)  # heavy tails
 ```
 
-The ladder reads simply. A result that exceeds the Gaussian twins *and*
-the t twins is hard to attribute to tails. A result the t twins
-reproduce was tail dependence, not types. Either way the verdict is
-sharper than a single null could give.
+`df` sets how heavy the null’s tails are: smaller `df` means stronger
+tail co-movement, and as `df` grows the t null returns to the Gaussian
+one. The two values above bracket the range seen in questionnaire and
+clinical data, and both should be reported rather than the one that
+suits the conclusion. `df` is fixed by the user and never estimated from
+the sample. A null whose tail weight was fitted to the data would absorb
+tail structure adaptively, which is the failure this section exists to
+avoid.
+
+The t rung never replaces the Gaussian run and is never reported alone.
+A `matchednull` result quoted without its Gaussian verdict is not a
+matched-null result.
+
+| Gaussian rung | t rung | Reading |
+|----|----|----|
+| not exceeded | *not run* | The count is what margins and correlations alone produce. Stop here; the t rung answers a question that has not arisen. |
+| exceeded | exceeded | The exceedance is not attributable to tail co-movement. Proceed to the categorical-signature check. |
+| exceeded | not exceeded | The exceedance was tail dependence, not types. Report it as such. |
+| exceeded | mixed across `df` | Report the whole ladder, not the friendliest rung. Sensitivity to `df` is itself the finding. |
+
+Read the rungs in order. A lower rung that has not fired makes the rungs
+above it uninformative, not permissive.
+
+The t rung and the categorical-signature check attack the same ambiguity
+from opposite directions. The t rung asks whether the exceedance
+survives once tail co-movement is matched away, which is a question
+about the null. The signature check, the taxometric evidence of the
+previous section, asks whether the structure carries the discontinuity a
+taxon would leave, which is a question about the data. They are
+independent, and a types claim needs both to agree. An exceedance that
+clears the t rung but shows no categorical signature is structure
+without evidence of kind; an exceedance the t rung reproduces is tail
+dependence whatever the signatures say.
+
+Because the ladder is a sequence of tests, its rungs and its stopping
+rule belong in the preregistration alongside the summary statistic.
+Choosing which null to report after seeing the verdicts reintroduces the
+flexibility the matched null was built to remove. The conjunction rule
+used here, where a types claim requires exceedance at every rung run, is
+conservative by construction and needs no multiplicity correction. A
+disjunction rule, exceedance at any rung, would need one, and is not
+recommended.
 
 ## What the test declines to answer
 

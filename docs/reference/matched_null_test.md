@@ -19,7 +19,8 @@ matched_null_test(
   probs = c(0.025, 0.975),
   copula = c("gaussian", "t"),
   df = 8,
-  ridge = 1e-06
+  ridge = 1e-06,
+  parallel = FALSE
 )
 ```
 
@@ -48,12 +49,28 @@ matched_null_test(
 
   Dependence family of the twins and t degrees of freedom, passed to
   [`copula_null()`](https://haomeng797-ship-it.github.io/matchednull/reference/copula_null.md).
-  Defaults to `"gaussian"`.
+  Defaults to `"gaussian"`, which is the null of the method;
+  `copula = "t"` adds a second, tighter null rather than substituting
+  for it, and `df` is fixed by the caller, never estimated from the
+  data.
 
 - ridge:
 
   Passed to
   [`copula_null()`](https://haomeng797-ship-it.github.io/matchednull/reference/copula_null.md).
+
+- parallel:
+
+  Evaluate the twin loop through future.apply, so that the backend is
+  whatever
+  [`future::plan()`](https://future.futureverse.org/reference/plan.html)
+  the caller has set. Because the twins are independent and the null
+  construction itself is a negligible share of the cost, the speed-up is
+  close to the cost of the user's own pipeline divided by the number of
+  workers. Seeded results are reproducible and do not depend on how many
+  workers run them. They do, however, differ from the `parallel = FALSE`
+  stream, which is left byte-identical to earlier versions, so a seeded
+  analysis should not switch settings partway through.
 
 ## Value
 
@@ -72,6 +89,8 @@ by itself license types: heavy-tailed dependence also exceeds a Gaussian
 null. To separate the two, rerun with `copula = "t"` (df 8, then 3). A
 result that survives the t twins as well is harder to attribute to
 tails; a result the t twins reproduce was tail dependence, not types.
+The Gaussian run remains the test, and a result quoted without its
+Gaussian verdict is not a matched-null result.
 
 ## Examples
 
