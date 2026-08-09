@@ -137,27 +137,16 @@ x_mix <- rbind(matrix(rnorm(200 * 4), 200, 4) %*% chol(Spos),
 pick_k(x_mix)
 ```
 
-```{r orient-plot, echo = FALSE, fig.alt = "Two scatterplots of the first two variables. In the real data the two groups' covariance ellipses cross, one stretched along the diagonal and one tilted against it; the matched twin is a single featureless cloud with one ellipse."}
-grp <- rep(1:2, each = 200)
-set.seed(3)
-twin <- copula_null(x_mix)
-ellipse80 <- function(X, col) {
-  mu <- colMeans(X); th <- seq(0, 2 * pi, length.out = 200)
-  ring <- cbind(cos(th), sin(th)) %*% chol(cov(X)) * sqrt(qchisq(.8, 2))
-  lines(ring[, 1] + mu[1], ring[, 2] + mu[2], col = col, lwd = 2.5)
-}
-op <- par(mfrow = c(1, 2), mar = c(4, 4, 2.5, 1))
-plot(x_mix[, 1], x_mix[, 2], col = c("grey60", "#7da5c9")[grp],
-     pch = 19, cex = .5, xlab = "variable 1", ylab = "variable 2",
-     main = "real data (groups coloured)")
-ellipse80(x_mix[grp == 1, 1:2], "grey25")
-ellipse80(x_mix[grp == 2, 1:2], "#1c3d5a")
-plot(twin[, 1], twin[, 2], col = "grey60",
-     pch = 19, cex = .5, xlab = "variable 1", ylab = "variable 2",
-     main = "one matched twin")
-ellipse80(twin[, 1:2], "grey25")
-par(op)
-```
+<figure id="fig-orientation">
+<img src="figures/flexmix_orientation.png" class="fig-light" width="100%"
+     alt="Two scatterplots of the first two variables. In the real data the two groups' covariance ellipses cross, one stretched along the diagonal and one tilted against it; the matched twin is a single featureless cloud with one ellipse.">
+<img src="figures/flexmix_orientation_dark.png" class="fig-dark" width="100%"
+     alt="Two scatterplots of the first two variables. In the real data the two groups' covariance ellipses cross, one stretched along the diagonal and one tilted against it; the matched twin is a single featureless cloud with one ellipse.">
+<figcaption><strong>Figure 1.</strong> The first two variables of the orientation
+mixture. The two groups' 80% covariance ellipses cross in the real data; the
+matched twin, built from the pooled margins and correlations, is one
+featureless cloud.</figcaption>
+</figure>
 
 Each margin is exactly standard normal in both groups, and the pooled
 correlation is near zero, so the twins are built from almost uncorrelated

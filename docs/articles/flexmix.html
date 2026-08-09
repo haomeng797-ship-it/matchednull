@@ -210,8 +210,11 @@ is modest):</p>
 <span>               <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">200</span> <span class="op">*</span> <span class="fl">4</span><span class="op">)</span>, <span class="fl">200</span>, <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="va">Sneg</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">pick_k</span><span class="op">(</span><span class="va">x_mix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2</span></span></code></pre></div>
-<p><img src="flexmix_files/figure-html/orient-plot-1.png" class="r-plt" alt="Two scatterplots of the first two variables. In the real data the two groups' covariance ellipses cross, one stretched along the diagonal and one tilted against it; the matched twin is a single featureless cloud with one ellipse." width="768"></p>
-<p>Each margin is exactly standard normal in both groups, and the pooled
+<figure id="fig-orientation"><img src="figures/flexmix_orientation.png" class="fig-light" width="100%" alt="Two scatterplots of the first two variables. In the real data the two groups' covariance ellipses cross, one stretched along the diagonal and one tilted against it; the matched twin is a single featureless cloud with one ellipse."><img src="figures/flexmix_orientation_dark.png" class="fig-dark" width="100%" alt="Two scatterplots of the first two variables. In the real data the two groups' covariance ellipses cross, one stretched along the diagonal and one tilted against it; the matched twin is a single featureless cloud with one ellipse."><figcaption><strong>Figure 1.</strong> The first two variables of the orientation
+mixture. The two groups’ 80% covariance ellipses cross in the real data;
+the matched twin, built from the pooled margins and correlations, is one
+featureless cloud.
+</figcaption></figure><p>Each margin is exactly standard normal in both groups, and the pooled
 correlation is near zero, so the twins are built from almost
 uncorrelated Gaussian dependence and stay a single featureless cloud
 (right panel). The structure lives entirely in the joint dependence,
