@@ -2,7 +2,7 @@ Package: matchednull
 Title: Matched-Null Tests for Cluster-Count Claims
 Version: 0.2.0
 Authors@R:
-    person("Miura", "Meng", email = "meng10@upenn.edu", role = c("aut", "cre"),
+    person("Miura", "Meng", email = "haomeng797@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0004-1522-1997"))
 Description: Builds matched nulls for cluster-count claims: synthetic twins of a
     dataset that preserve every marginal distribution and the full correlation

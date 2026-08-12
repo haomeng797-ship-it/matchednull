@@ -5,7 +5,7 @@ type: software
 authors:
   - given-names: Miura
     family-names: Meng
-    email: meng10@upenn.edu
+    email: haomeng797@gmail.com
     orcid: "https://orcid.org/0009-0004-1522-1997"
     affiliation: "University of Pennsylvania"
 repository-code: "https://github.com/haomeng797-ship-it/matchednull"
