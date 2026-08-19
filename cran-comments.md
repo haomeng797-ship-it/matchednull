@@ -16,7 +16,8 @@
 * This is a minor release. `copula_null()` and `matched_null_test()` gain a
   `copula = "t"` option with a `df` argument, so that an apparent excess of
   clusters can be checked against a heavier-tailed null before it is read as
-  evidence of cluster structure.
-* The mclust, knitr, and rmarkdown packages are used only in Suggests
-  (examples, tests, and the vignette are conditional on their availability).
+  evidence of cluster structure. `matched_null_test()` also gains optional
+  parallel execution through 'future.apply'.
+* The mclust, knitr, rmarkdown, future, and future.apply packages are used
+  only in Suggests and are checked before use.
 * Reverse dependencies: none.
