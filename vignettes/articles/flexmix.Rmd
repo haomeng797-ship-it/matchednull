@@ -3,8 +3,8 @@ title: "Auditing a flexmix pipeline"
 description: >
   How to wrap a stepFlexmix workflow as the statistic of a matched-null test:
   what to return, where the EM randomness belongs, and two worked examples,
-  one where the selected component count is only the data's shape and one
-  where it survives the twins.
+  one where the twins reproduce the selected component count and one where it
+  survives them.
 ---
 
 ```{r, include = FALSE}
@@ -22,11 +22,11 @@ finite mixture models in R: one EM engine, exchangeable model drivers, and a
 `stepFlexmix()` loop that fits a range of component numbers and hands back the
 best by BIC. That selected number inherits the problem this package exists
 for. On data with skew or correlation, BIC often prefers several components
-even when the population is a single undivided cloud, so the number describes
-the data's shape at least as often as it describes subpopulations, and nothing
-in the flexmix output says which reading you are entitled to.
+even when the population is a single undivided cloud, so a reported number can
+come from margins and correlations alone rather than from subpopulations, and
+nothing in the flexmix output says which reading you are entitled to.
 
-The matched-null test asks the deciding question: would a dataset with the
+The matched-null test asks a specific question: would a dataset with the
 same margins and the same correlations, but no subpopulations, have led
 `stepFlexmix()` to the same number? The [main
 vignette](matchednull.html) and the accompanying paper run that audit
@@ -90,7 +90,7 @@ Three details carry the correctness of the wrapper.
   default, and the twin loop calls it a few hundred times. `verbose = FALSE`
   belongs in the wrapper, not in the caller's memory.
 
-## Example 1: a count that is only the data's shape
+## Example 1: a count the twins reproduce
 
 A single lognormal population with ordinary correlations, and no
 subpopulations by construction:
@@ -116,13 +116,14 @@ set.seed(7)
 matched_null_test(x_skew, pick_k, R = 200)
 ```
 
-The real count sits inside the interval the twins produce. Four components is
+The real count sits inside the interval the twins produce: no detected excess
+under this reference. On data built from one population, four components is
 what this shape produces under this pipeline, and reading it as four kinds of
 observation would be reading the skew twice.
 
 ## Example 2: components the margins cannot see
 
-The opposite verdict, on data where the groups are real but invisible to any
+The opposite outcome, on data where the groups are real but invisible to any
 single variable. Two groups share identical margins and differ only in the
 orientation of their correlations, one correlated positively, the other
 weakly negatively (the strongest negative exchangeable correlation that stays
@@ -189,9 +190,10 @@ analysis and keep it.
 Everything else about the audit is unchanged from the mclust case. Inspect
 the margins first, because a variable that is already bimodal carries its
 groups into the twins and the count test is the wrong instrument there. And
-an exceedance under the Gaussian twins licenses "structure beyond margins and
-correlations", not yet "types"; the t-copula rung that separates heavy-tailed
-dependence from genuine subpopulations is described in [How the matched-null
+a departure from the Gaussian twins means "structure beyond margins and
+correlations", not yet "types"; the t-copula variant, which checks whether that
+departure survives heavier-tailed dependence in the reference and does not by
+itself establish or rule out clusters, is described in [How the matched-null
 test works](how-it-works.html#a-second-deliberately-blinded-null-the-t-copula-rung),
 and it applies to a flexmix pipeline exactly as written, since the rung lives
 in the null, not in the pipeline.

@@ -11,46 +11,65 @@ copula_null(x, copula = c("gaussian", "t"), df = 8, ridge = 1e-06)
 variables), complete cases only, at least two rows and two columns.}
 
 \item{copula}{Dependence family of the twin: \code{"gaussian"} (default) or
-\code{"t"}. The Gaussian family is the null of the method; \code{"t"} supplies a
-second, deliberately blinded null for stress-testing an exceedance the
-Gaussian twins have already licensed, and does not replace it.}
+\code{"t"}. The Gaussian family is the reference model of the method; \code{"t"}
+is a sensitivity variant with heavier-tailed dependence, run alongside
+the Gaussian twins rather than in place of them, and it does not by
+itself establish or rule out clusters.}
 
 \item{df}{Degrees of freedom of the t copula, a single positive number
 (default 8; used only when \code{copula = "t"}). Smaller is heavier-tailed;
-\code{df = 3} is a hard stress test, \code{df = 8} a moderate one.}
+\code{df = 3} is a heavy-tailed variant, \code{df = 8} a moderate one.}
 
 \item{ridge}{Small value added to the diagonal of the correlation matrix
 only if it is not positive definite (default \code{1e-6}).}
 }
 \value{
 A numeric matrix of the same dimensions as \code{x}: one matched-null
-draw. Each column contains exactly the values of the corresponding column
-of \code{x}, rearranged.
+draw. Each column is a permutation of the corresponding column of \code{x},
+so the margins are exact; the correlations are approximate.
 }
 \description{
 Builds a synthetic twin of \code{x} that preserves every marginal distribution
-exactly and the correlation matrix to within sampling error, while
-containing no cluster structure by construction. With
+exactly and reproduces the correlation matrix approximately, while
+containing no cluster structure by construction. Each column of the twin
+is a permutation of the corresponding column of \code{x}, so no marginal test
+can tell them apart. The correlations are only approximately reproduced:
+the observed Pearson correlation matrix serves as the latent correlation
+of the copula, and once the non-normal empirical margins are restored by
+rank reordering the output Pearson correlations are not guaranteed to
+equal it. The gap is not sampling noise alone: it carries a random
+component from the finite draw and, for skewed or heavy-tailed margins, a
+systematic component as well. With
 \code{copula = "gaussian"} (the default) all dependence in the twin is Gaussian.
-Clustering found in real data but not in its twins must come from structure
-beyond the margins and covariance; clustering found equally in both was
-never more than the data's shape.
+Clustering found in real data but not in its twins indicates structure
+this reference does not carry; clustering found equally in both is no
+detected excess under this reference, which is not evidence that clusters
+are absent.
 }
 \details{
 The construction is a rank reordering in the tradition of Iman and Conover
-(1982): draw a Gaussian sample with the data's correlation matrix, then
-replace each column with the sorted real values laid down in the rank order
-of the Gaussian column. Every real value is reused exactly once per column,
-which is why the margins match exactly; the rank correlation is matched
-exactly and the Pearson correlation to within sampling error.
+(1982): draw a Gaussian sample with the data's correlation matrix as its
+latent correlation, then replace each column with the sorted real values
+laid down in the rank order of the Gaussian column. Every real value is
+reused exactly once per column, which is why the margins match exactly.
+When the observed column has no ties the sorted values are laid down in a
+strictly increasing map of the Gaussian column, so the twin's rank
+correlations are those of the Gaussian sample. Tied observed values are
+laid down together, the twin carries those ties, and the rank pattern then
+depends on how the ties are broken, so the equality no longer holds. The
+twin's Pearson correlations are close to, but not in general equal to, the
+observed ones.
 
 With \code{copula = "t"} the same construction is driven by a multivariate t
-sample instead: margins and correlations are preserved as before, but the
-twin also carries tail dependence, so extreme values across variables
-arrive together, the more strongly the smaller \code{df}. A t twin is still a
-single population with no clusters. Its use is as a stress test: a verdict
-of "exceeds the Gaussian null" that a t twin reproduces was heavy-tailed
-dependence, not types.
+sample instead: margins are preserved exactly and correlations
+approximately as before, but the twin also carries tail dependence, so
+extreme values across variables arrive together, the more strongly the
+smaller \code{df}. A t twin is still a single population with no clusters. It
+is a sensitivity variant of the reference model with heavier-tailed
+dependence: a departure from the Gaussian twins that the t twins reproduce
+is consistent with tail dependence, and one they do not reproduce is
+harder to attribute to tails. Neither outcome by itself establishes or
+rules out clusters.
 }
 \examples{
 set.seed(1)
@@ -60,10 +79,10 @@ x <- matrix(rnorm(200 * 3), 200, 3) \%*\% chol(matrix(c(1, .5, .3,
 twin <- copula_null(x)
 # margins identical:
 all(sort(twin[, 1]) == sort(x[, 1]))
-# correlations close:
+# correlations: close, not exact
 round(cor(x) - cor(twin), 2)
 
-# a heavier-tailed twin for stress-testing:
+# a heavier-tailed twin, as a sensitivity variant:
 stress <- copula_null(x, copula = "t", df = 3)
 all(sort(stress[, 1]) == sort(x[, 1]))
 
