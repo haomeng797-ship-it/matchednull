@@ -13,9 +13,10 @@ matchednull helps you find out. It creates a null twin of your dataset with
 exactly the same marginal distributions and approximately the same correlation
 structure, but no cluster structure by construction. You then run your own
 clustering pipeline on both the observed data and the null twins. If the
-observed data consistently yield more clusters than the null twins, that's
-evidence of genuine cluster structure. Otherwise, you'll know before a
-reviewer asks.
+observed data yield more clusters than the null twins, they carry structure
+that a reference with their margins and correlations does not, which is where
+a types claim can start rather than where it ends. If they don't, you'll know
+before a reviewer asks.
 
 <p align="center">
   <img src="man/figures/positive_control.png#gh-light-mode-only" class="fig-light" width="92%" alt="Positive controls: the test detects real types and stays quiet on typeless data">
@@ -25,8 +26,9 @@ reviewer asks.
 *Positive controls. Signal strength is the within-component correlation in
 panel A and the separation between means, in standard deviations, in panel B.
 The grey shaded band is the matched null's 95% interval: a point is red
-(detected) when the real number of clusters exceeds the band, grey (null-like)
-when it falls inside. The test finds real types whether they live only in the
+(detected) when the real number of clusters exceeds the band, grey (the
+legend's null-like label, meaning within the reference interval) when it falls
+inside. The test finds real types whether they live only in the
 correlation structure (A) or in well-separated means (B).*
 
 One thing in that figure is worth a second look: in panel B the test stops
@@ -36,10 +38,15 @@ follows the construction out to that point, explains what the test is declining
 to answer there, and shows the calibration behind the rest of the figure.
 
 `copula_null()` generates the null twins, preserving every marginal
-distribution exactly and the correlation matrix to within sampling error.
-`matched_null_test()` applies any user-supplied clustering pipeline to the
-observed data and to `R` null twins, then tests whether the observed result
-stands out from the null distribution.
+distribution exactly (each twin column is a permutation of the observed
+values) and reproducing the correlation matrix approximately: the observed
+correlation matrix is used as the latent correlation of the copula, and
+non-normal margins move the output Pearson correlations, so they come out
+close but not exact. `matched_null_test()` applies any user-supplied
+clustering pipeline to the observed data and to `R` null twins, then reports
+whether the observed result stands out from the twins. Its `p_exceed` is a
+plug-in Monte Carlo exceedance quantity under a reference fitted to the same
+data, not an exact finite-sample p-value.
 
 ## Installation
 
@@ -63,10 +70,10 @@ x <- matrix(rnorm(500 * 4), 500, 4)   # typeless data
 set.seed(2)
 matched_null_test(x, pick_k, R = 50)
 #> Matched-null test (50 Gaussian null twins)
-#>   real statistic:      1
-#>   null interval:       [1, 1]
-#>   p (real >= nulls):   1
-#>   verdict:             null-like (within the twins' interval)
+#>   real statistic:               1
+#>   null interval:                [1, 1]
+#>   MC exceedance (null >= real): 1
+#>   outcome:                      no detected excess (within the reference interval)
 ```
 
 See `vignette("matchednull")` for the full walk-through, including a case
