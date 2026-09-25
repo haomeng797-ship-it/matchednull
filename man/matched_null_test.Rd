@@ -18,20 +18,24 @@ matched_null_test(
 \arguments{
 \item{x}{A numeric matrix or data frame, complete cases only.}
 
-\item{cluster_fn}{A function taking a data matrix and returning a single
+\item{cluster_fn}{A function taking a data matrix and returning one finite
 number: the statistic to be tested, typically the selected number of
-clusters (but any scalar summary of clustering strength works).}
+clusters (but any scalar summary of clustering strength works). A return
+value that is missing, non-finite, non-numeric, or not of length one is
+an error, on the real data and on every twin.}
 
-\item{R}{Number of matched-null twins to draw (default 200).}
+\item{R}{Number of matched-null twins to draw (default 200). The result
+always holds exactly \code{R} twin statistics.}
 
-\item{probs}{Lower and upper quantiles of the null distribution used for
-the interval verdict (default \code{c(.025, .975)}).}
+\item{probs}{Lower and upper quantiles of the twin statistics that define
+the reference interval (default \code{c(.025, .975)}).}
 
 \item{copula, df}{Dependence family of the twins and t degrees of freedom,
-passed to \code{\link[=copula_null]{copula_null()}}. Defaults to \code{"gaussian"}, which is the null of
-the method; \code{copula = "t"} adds a second, tighter null rather than
-substituting for it, and \code{df} is fixed by the caller, never estimated from
-the data.}
+passed to \code{\link[=copula_null]{copula_null()}}. Defaults to \code{"gaussian"}, which is the
+reference model of the method; \code{copula = "t"} is a sensitivity variant
+with heavier-tailed dependence, run in addition to the Gaussian test
+rather than in place of it, and \code{df} is fixed by the caller, never
+estimated from the data.}
 
 \item{ridge}{Passed to \code{\link[=copula_null]{copula_null()}}.}
 
@@ -46,30 +50,62 @@ so a seeded analysis should not switch settings partway through.}
 }
 \value{
 An object of class \code{"matched_null_test"}: a list with the real
-statistic (\code{real}), the null draws (\code{null}), the null interval
-(\code{interval}), a one-sided Monte Carlo p-value for exceedance
-(\code{p_exceed}), the interval verdict (\code{within}), and the null family used
-(\code{copula}, with \code{df} when it is \code{"t"}). Reproducibility is the caller's:
-set a seed before calling.
+statistic (\code{real}), the \code{R} twin statistics (\code{null}), the reference
+interval (\code{interval}, the \code{probs} quantiles of \code{null}), the plug-in
+Monte Carlo exceedance quantity (\code{p_exceed}, computed as
+\code{(1 + sum(null >= real)) / (R + 1)}; not an exact finite-sample p-value,
+see Details), whether the real statistic lies inside the interval
+(\code{within}), the requested \code{R}, and the reference family used (\code{copula},
+with \code{df} when it is \code{"t"}). Reproducibility is the caller's: set a seed
+before calling.
 }
 \description{
 Runs the user's own clustering pipeline on the real data and on \code{R}
 matched-null twins of it (see \code{\link[=copula_null]{copula_null()}}), and asks whether the real
-result exceeds what the twins, which share the data's margins and
-covariance but contain no cluster structure, produce. The pipeline is
-supplied as a function, so any procedure that returns a number, a
-BIC-selected mixture, a k-means heuristic, a published typology's own
-workflow, can be tested unchanged.
+result exceeds what the twins produce. The twins are a reference model
+fitted to the data: every twin column is a permutation of the observed
+values, so the margins are preserved exactly; the correlations are
+reproduced approximately (see \code{\link[=copula_null]{copula_null()}} for why); and the twins
+contain no cluster structure by construction. The pipeline is supplied as
+a function, so any procedure that returns a number, a BIC-selected
+mixture, a k-means heuristic, a published typology's own workflow, can be
+tested unchanged.
 }
 \details{
-A verdict of "exceeds the null" under the default Gaussian twins licenses
-only "structure beyond margins and correlations", it does not by itself
-license types: heavy-tailed dependence also exceeds a Gaussian null. To
-separate the two, rerun with \code{copula = "t"} (df 8, then 3). A result that
-survives the t twins as well is harder to attribute to tails; a result the
-t twins reproduce was tail dependence, not types. The Gaussian run remains
-the test, and a result quoted without its Gaussian verdict is not a
-matched-null result.
+\code{cluster_fn} must return one finite number on every call. If it returns
+\code{NA}, \code{NaN}, \code{Inf}, a non-numeric value, or a vector of the wrong length,
+on the real data or on any twin, the test stops with an error naming the
+offending call. Invalid twins are never dropped and \code{R} is never quietly
+reduced, because an exceedance computed from a subset of the twins would
+not be the one that was asked for. Errors raised inside \code{cluster_fn}
+propagate unchanged.
+
+\code{p_exceed} is a plug-in Monte Carlo exceedance quantity: one plus the
+number of twins whose statistic reaches the real value, divided by
+\code{R + 1}, under a reference fitted to the same data. It is not an exact
+finite-sample p-value. The reference's correlations are estimated from
+\code{x} and reproduced only approximately, so \code{p_exceed} is a comparison
+against that fitted reference, not a test with guaranteed size.
+
+Reading the outcome. A real statistic above the twins' interval means the
+data depart from this reference model, one that carries their margins,
+approximately their correlations, and no cluster structure. It does not by
+itself establish that clusters exist: structure the reference does not
+carry, heavy-tailed dependence included, can produce the same departure,
+and whether a particular departure registers depends on the statistic, the
+pipeline and the sample size. A real statistic inside the interval means no
+detected excess under this reference; it is not evidence that clusters are
+absent. A statistic below the interval is reported as a diagnostic (the
+pipeline finds less on the data than on its twins), not as a verdict.
+
+\code{copula = "t"} is a sensitivity variant. It gives the twins heavier-tailed
+dependence at a \code{df} fixed by the caller (8, then 3, is a reasonable
+pair), so a rerun shows whether a departure from the Gaussian twins
+persists once tail co-movement is built into the reference. A departure
+that persists is harder to attribute to tails; one that disappears is
+consistent with tail dependence. Neither outcome by itself establishes or
+rules out clusters. The Gaussian run is the primary analysis and the t run
+is reported alongside it, not in its place.
 }
 \examples{
 \donttest{
@@ -81,7 +117,7 @@ if (requireNamespace("mclust", quietly = TRUE)) {
   x <- matrix(rnorm(500 * 4), 500, 4)  # typeless data
   matched_null_test(x, pick_k, R = 30)
 
-  # stress test of an exceedance verdict against heavier tails:
+  # sensitivity variant with heavier-tailed dependence in the reference:
   # matched_null_test(x, pick_k, R = 30, copula = "t", df = 8)
 }
 }
