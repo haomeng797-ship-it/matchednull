@@ -5,8 +5,10 @@
 A clustering method applied to continuous data will report some number
 of clusters whether or not any exist. So when an analysis announces that
 a dataset contains, say, four types, the number may describe the
-population, or only the shape of the data under that method.
-`matchednull` separates the two.
+population, or it may be what the method would report for any data with
+the same margins and correlations. `matchednull` compares the reported
+number with what a specified reference model of exactly such data
+produces.
 
 ## The idea: a null twin
 
@@ -16,12 +18,16 @@ removes the one thing in question:
 
 - every variable’s distribution is preserved **exactly** (the twin
   reuses the real values, reshuffled);
-- the correlation matrix is preserved to within sampling error;
+- the correlation matrix is reproduced approximately: the observed
+  correlations serve as the latent correlation of the copula, and
+  restoring the non-normal margins by rank reordering moves the output
+  Pearson correlations, so they come out close but not exact;
 - all remaining dependence is Gaussian, so the twin contains **no
   cluster structure by construction**.
 
 If your pipeline finds as many clusters in the twins as in the real
-data, those clusters were the data’s shape, not its people.
+data, there is no detected excess under this reference, which is not
+evidence that the clusters are absent.
 
 ``` r
 
@@ -34,7 +40,7 @@ twin <- copula_null(x)
 
 all(sort(twin[, 1]) == sort(x[, 1]))   # margins: identical
 #> [1] TRUE
-round(cor(x) - cor(twin), 2)           # correlations: close
+round(cor(x) - cor(twin), 2)           # correlations: close, not exact
 #>      [,1]  [,2]  [,3]
 #> [1,] 0.00  0.01  0.05
 #> [2,] 0.01  0.00 -0.03
@@ -47,7 +53,9 @@ round(cor(x) - cor(twin), 2)           # correlations: close
 takes your data and **your own pipeline**, wrapped as a function that
 returns one number (typically the selected number of clusters). It runs
 the identical pipeline on the real data and on `R` twins, and asks
-whether the real answer stands out.
+whether the real answer stands out. The `p_exceed` it reports is a
+plug-in Monte Carlo exceedance quantity under a reference fitted to the
+same data, not an exact finite-sample p-value.
 
 ``` r
 
@@ -58,10 +66,10 @@ pick_k <- function(d) Mclust(d, G = 1:4, modelNames = "VVV", verbose = FALSE)$G
 set.seed(7)
 matched_null_test(x, pick_k, R = 30)
 #> Matched-null test (30 Gaussian null twins)
-#>   real statistic:      1
-#>   null interval:       [1, 1]
-#>   p (real >= nulls):   1
-#>   verdict:             null-like (within the twins' interval)
+#>   real statistic:               1
+#>   null interval:                [1, 1]
+#>   MC exceedance (null >= real): 1
+#>   outcome:                      no detected excess (within the reference interval)
 ```
 
 ``` r
@@ -81,16 +89,18 @@ X[z == 2, 3:4] <- X[z == 2, 3:4] %*% L2
 set.seed(7)
 matched_null_test(X, pick_k, R = 30)
 #> Matched-null test (30 Gaussian null twins)
-#>   real statistic:      2
-#>   null interval:       [1, 1]
-#>   p (real >= nulls):   0.032
-#>   verdict:             exceeds the null (beyond margins + covariance)
+#>   real statistic:               2
+#>   null interval:                [1, 1]
+#>   MC exceedance (null >= real): 0.032
+#>   outcome:                      departure from the reference model (above the interval; kind not settled by this test)
 ```
 
-The first call returns *null-like*: whatever clustering the pipeline
-reports is reproduced by twins with no types. The second returns
-*exceeds the null*: the grouping lives in structure the twins cannot
-carry.
+The first call reports *no detected excess*: whatever clustering the
+pipeline reports is reproduced by twins with no types, which is not the
+same as evidence that types are absent. The second reports a *departure
+from the reference model*: the grouping lives in structure the twins
+cannot carry. That is a departure from a specified reference, not yet a
+finding of types; what kind of structure it is remains to be settled.
 
 ## Plugging in your own pipeline
 
@@ -109,14 +119,14 @@ Two practical notes:
   tie-break granular (Likert-type) scales before formal unimodality
   tests.
 
-## Stress-testing an exceedance: heavier tails
+## A sensitivity variant: heavier tails
 
-“Exceeds the null” under Gaussian twins licenses only *structure beyond
-margins and correlations*, not types. Heavy-tailed dependence, where
-extreme values across variables arrive together, also exceeds a Gaussian
-null, and real questionnaire and clinical data are heavy-tailed more
-often than not. To separate the two readings, rerun the test with
-t-copula twins: same margins, same correlations, but tails that co-move.
+A departure from the Gaussian twins means only *structure beyond margins
+and correlations*, not types. Heavy-tailed dependence, where extreme
+values across variables arrive together, also exceeds a Gaussian null,
+and real questionnaire and clinical data are heavy-tailed more often
+than not. To separate the two readings, rerun the test with t-copula
+twins: same margins, same correlations, but tails that co-move.
 
 ``` r
 
@@ -125,24 +135,23 @@ matched_null_test(x, pick_k, R = 200, copula = "t", df = 3)  # heavy tails
 ```
 
 The Gaussian twins remain the test. A t copula could not take that role,
-since it would absorb into the null the tail structure the test is meant
-to detect, and that is exactly what makes it useful as a second,
-deliberately blinded null: an exceedance that survives twins which have
-already matched tail co-movement away cannot be attributed to tail
-co-movement. Run this rung only on an exceedance the Gaussian run has
-already licensed; if the Gaussian twins were not exceeded, the count is
-what margins and correlations alone produce and the question does not
-arise. `df` is set by you and never estimated from the data, and both
-values should be reported rather than the one that suits the conclusion.
-A result quoted without its Gaussian verdict is not a matched-null
-result.
+since it would absorb into the reference the tail structure the test is
+meant to detect, and that is exactly what makes it useful as a
+sensitivity variant: a departure that survives twins which have already
+matched tail co-movement away cannot be attributed to tail co-movement.
+Run this variant on a departure the Gaussian run has already shown; if
+the Gaussian twins were not exceeded there is no excess for the variant
+to probe, and the question does not arise. `df` is set by you and never
+estimated from the data, and both values should be reported rather than
+the one that suits the conclusion. A result quoted without its Gaussian
+outcome is not a matched-null result.
 
 The ladder reads: a result that exceeds the Gaussian twins *and* the t
-twins is hard to attribute to tails; a result the t twins reproduce was
-tail dependence, not types. Either way the verdict is sharper than what
-a single null could give. Whether a surviving exceedance is
-*categorical* is a separate question, answered by the taxometric checks
-rather than by any null.
+twins is hard to attribute to tails; a result the t twins reproduce is
+consistent with tail dependence rather than types. The t variant does
+not by itself establish or rule out clusters. Whether a surviving
+departure is *categorical* is a separate question, answered by the
+taxometric checks rather than by any reference model.
 
 ## Going further
 
@@ -156,6 +165,8 @@ article on the package website, which is kept current between releases.
 ## Reference
 
 The method, its positive controls, and its false-positive calibration
-are described in the accompanying paper: *Types Without Taxa: A
-Covariance-Matched-Null Multiverse Test of Categorical versus Continuous
-Personality Structure*.
+are described in the accompanying paper: Meng (2026), *A Matched-Null
+Test of Whether the Clusters a Pipeline Reports Are Real, With an
+Application to Personality Types*, manuscript under review. Its
+personality application was preregistered as *Types Without Taxa*
+(<https://osf.io/2ekcg>).

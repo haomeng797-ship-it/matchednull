@@ -7,14 +7,15 @@ model drivers, and a
 that fits a range of component numbers and hands back the best by BIC.
 That selected number inherits the problem this package exists for. On
 data with skew or correlation, BIC often prefers several components even
-when the population is a single undivided cloud, so the number describes
-the data’s shape at least as often as it describes subpopulations, and
-nothing in the flexmix output says which reading you are entitled to.
+when the population is a single undivided cloud, so a reported number
+can come from margins and correlations alone rather than from
+subpopulations, and nothing in the flexmix output says which reading you
+are entitled to.
 
-The matched-null test asks the deciding question: would a dataset with
-the same margins and the same correlations, but no subpopulations, have
-led [`stepFlexmix()`](https://rdrr.io/pkg/flexmix/man/stepFlexmix.html)
-to the same number? The [main
+The matched-null test asks a specific question: would a dataset with the
+same margins and the same correlations, but no subpopulations, have led
+[`stepFlexmix()`](https://rdrr.io/pkg/flexmix/man/stepFlexmix.html) to
+the same number? The [main
 vignette](https://haomeng797-ship-it.github.io/matchednull/articles/matchednull.md)
 and the accompanying paper run that audit through `mclust`. Pointing it
 at flexmix instead takes about ten lines, but two of those lines are
@@ -88,7 +89,7 @@ Three details carry the correctness of the wrapper.
   hundred times. `verbose = FALSE` belongs in the wrapper, not in the
   caller’s memory.
 
-## Example 1: a count that is only the data’s shape
+## Example 1: a count the twins reproduce
 
 A single lognormal population with ordinary correlations, and no
 subpopulations by construction:
@@ -117,19 +118,20 @@ it:
 set.seed(7)
 matched_null_test(x_skew, pick_k, R = 200)
 #> Matched-null test (200 Gaussian null twins)
-#>   real statistic:      4
-#>   null interval:       [3, 4]
-#>   p (real >= nulls):   0.935
-#>   verdict:             null-like (within the twins' interval)
+#>   real statistic:               4
+#>   null interval:                [3, 4]
+#>   MC exceedance (null >= real): 0.935
+#>   outcome:                      no detected excess (within the reference interval)
 ```
 
-The real count sits inside the interval the twins produce. Four
+The real count sits inside the interval the twins produce: no detected
+excess under this reference. On data built from one population, four
 components is what this shape produces under this pipeline, and reading
 it as four kinds of observation would be reading the skew twice.
 
 ## Example 2: components the margins cannot see
 
-The opposite verdict, on data where the groups are real but invisible to
+The opposite outcome, on data where the groups are real but invisible to
 any single variable. Two groups share identical margins and differ only
 in the orientation of their correlations, one correlated positively, the
 other weakly negatively (the strongest negative exchangeable correlation
@@ -146,9 +148,19 @@ pick_k(x_mix)
 #> [1] 2
 ```
 
-![Two scatterplots of the first two variables. The real data form an X
-of two crossing orientations; the matched twin is a single featureless
-cloud.](flexmix_files/figure-html/orient-plot-1.png)
+![Two scatterplots of the first two variables. In the real data the two
+groups' covariance ellipses cross, one stretched along the diagonal and
+one tilted against it; the matched twin is a single featureless cloud
+with one ellipse.](figures/flexmix_orientation.png)![Two scatterplots of
+the first two variables. In the real data the two groups' covariance
+ellipses cross, one stretched along the diagonal and one tilted against
+it; the matched twin is a single featureless cloud with one
+ellipse.](figures/flexmix_orientation_dark.png)
+
+**Figure 1.** The first two variables of the orientation mixture. The
+two groups’ 80% covariance ellipses cross in the real data; the matched
+twin, built from the pooled margins and correlations, is one featureless
+cloud.
 
 Each margin is exactly standard normal in both groups, and the pooled
 correlation is near zero, so the twins are built from almost
@@ -161,10 +173,10 @@ which is the regime the matched null exists to protect:
 set.seed(12)
 matched_null_test(x_mix, pick_k, R = 200)
 #> Matched-null test (200 Gaussian null twins)
-#>   real statistic:      2
-#>   null interval:       [1, 1]
-#>   p (real >= nulls):   0.005
-#>   verdict:             exceeds the null (beyond margins + covariance)
+#>   real statistic:               2
+#>   null interval:                [1, 1]
+#>   MC exceedance (null >= real): 0.005
+#>   outcome:                      departure from the reference model (above the interval; kind not settled by this test)
 ```
 
 Every twin comes back at one component and the real data stand at two.
@@ -201,10 +213,12 @@ setting per analysis and keep it.
 Everything else about the audit is unchanged from the mclust case.
 Inspect the margins first, because a variable that is already bimodal
 carries its groups into the twins and the count test is the wrong
-instrument there. And an exceedance under the Gaussian twins licenses
+instrument there. And a departure from the Gaussian twins means
 “structure beyond margins and correlations”, not yet “types”; the
-t-copula rung that separates heavy-tailed dependence from genuine
-subpopulations is described in [How the matched-null test
+t-copula variant, which checks whether that departure survives
+heavier-tailed dependence in the reference and does not by itself
+establish or rule out clusters, is described in [How the matched-null
+test
 works](https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.html#a-second-deliberately-blinded-null-the-t-copula-rung),
 and it applies to a flexmix pipeline exactly as written, since the rung
 lives in the null, not in the pipeline.

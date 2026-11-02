@@ -11,9 +11,9 @@ four personality types, the number may describe the population, or it
 may describe only the shape of the data under that method. Nothing in
 the output tells you which.
 
-The matched-null test separates the two by asking a single question:
-**would a dataset with the same margins and the same correlations, but
-no types, have produced the same answer?**
+The matched-null test puts the number to a specified reference model by
+asking a single question: **would a dataset with the same margins and
+the same correlations, but no types, have produced the same answer?**
 
 ## Constructing the matched null
 
@@ -31,19 +31,24 @@ and the copula is Gaussian.
 
 Write the data as columns $`X_1, \dots, X_p`$ with empirical margins
 $`F_1, \dots, F_p`$ and correlation matrix $`C`$. Draw
-$`Z \sim \mathcal{N}(0, \Omega)`$ with $`\Omega`$ tuned so the induced
-correlations match $`C`$, then send each column back through its own
-empirical quantile function, $`Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)`$.
-Read from the inside out, that asks which percentile the Gaussian draw
-sits at and returns the real data value at that percentile.
+$`Z \sim \mathcal{N}(0, C)`$, with the observed correlation matrix used
+directly as the latent correlation of the copula, then send each column
+back through its own empirical quantile function,
+$`Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)`$. Read from the inside out, that
+asks which percentile the Gaussian draw sits at and returns the real
+data value at that percentile.
 
 Three properties carry the argument. Each $`Y_j`$ has *exactly* the
 empirical distribution of $`X_j`$, since the twin reshuffles observed
 values and invents none, so no marginal test can separate the two. The
-correlation matrix of $`Y`$ matches $`C`$ to within sampling error. And
-the copula contributes no clustering of its own: the Gaussian dependence
-is smooth, with no islands or gaps, so **as long as each margin is
-itself unimodal the twin contains no cluster structure by
+correlation matrix of $`Y`$ is close to $`C`$ but not in general equal
+to it: $`C`$ enters as the latent correlation of the Gaussian draw, and
+sending the columns back through non-normal empirical margins changes
+the Pearson correlations, so the match is approximate, and for skewed or
+heavy-tailed margins the gap can be systematic rather than sampling
+noise. And the copula contributes no clustering of its own: the Gaussian
+dependence is smooth, with no islands or gaps, so **as long as each
+margin is itself unimodal the twin contains no cluster structure by
 construction**. That qualifier is doing real work and is not
 boilerplate. A margin that is already multimodal is copied into the twin
 along with everything else, and it can carry groups in on its own; the
@@ -66,7 +71,7 @@ x <- matrix(rnorm(400 * 3), 400, 3) %*%
 twin <- copula_null(x)
 all(sort(twin[, 1]) == sort(x[, 1]))   # margins: identical
 #> [1] TRUE
-round(cor(x) - cor(twin), 2)           # correlations: close
+round(cor(x) - cor(twin), 2)           # correlations: close, not exact
 #>      [,1]  [,2]  [,3]
 #> [1,] 0.00  0.01  0.05
 #> [2,] 0.01  0.00 -0.03
@@ -86,11 +91,18 @@ is
 p \;=\; \frac{1 + \#\{\, r : t_r \ge t_0 \,\}}{R + 1}.
 ```
 
-The verdict reads *null-like* when $`t_0`$ sits inside the interval the
-twins produce, and *exceeds the null* when the real data stand out. The
-null is defined at the level of the data, not the pipeline, so the same
-twins work for a $`k`$-means heuristic, a published typology’s exact
-workflow, or a mixture model.
+This is a plug-in Monte Carlo exceedance quantity under a reference
+fitted to the same data, not an exact finite-sample $`p`$-value: the
+reference’s correlations are estimated from $`X`$ and reproduced only
+approximately, so $`p`$ is a comparison against a reference fitted to
+the same data rather than a test with guaranteed size. The outcome reads
+*no detected excess* when $`t_0`$ sits inside the interval the twins
+produce, and *departure from the reference model* when the real data
+stand out above it. A departure says the data carry structure this
+reference does not; what kind of structure is not settled by this test.
+The reference is defined at the level of the data, not the pipeline, so
+the same twins work for a $`k`$-means heuristic, a published typology’s
+exact workflow, or a mixture model.
 
 ``` r
 
@@ -113,7 +125,8 @@ data](figures/positive_control_dark.png)
 correlation in panel A and the separation between means, in standard
 deviations, in panel B. The grey shaded band is the 95% interval of the
 matched-null median k: a point is red (detected) when the real value
-exceeds the band and grey (null-like) when it falls inside.
+exceeds the band and grey (the legend’s null-like label: within the
+reference interval) when it falls inside.
 
 In panel A the types share identical margins and differ only in the
 *orientation* of their within-group correlations. A single Gaussian
@@ -145,16 +158,19 @@ band](figures/spec_curve_dark.png)
 
 **Figure 2.** Selected number of types across all fourteen mclust
 covariance models (steps), against the null band the twins produce
-(grey). The median verdict is null-like in every dataset.
+(grey). The median outcome is inside the reference interval in every
+dataset.
 
 The number of types the pipeline selects (the step function) sits inside
 the band the twins produce (grey) for the great majority of
-specifications, and the median verdict is null-like in every dataset.
-The handful of specifications that climb above the band are the most
-flexible covariance models, which read the data’s skew and correlation
-as extra components; the twins, which share that skew and correlation,
-climb with them. The apparent “types” are the shape of the data under
-`mclust`, not latent kinds of people.
+specifications, and the median outcome is inside the reference interval
+in every dataset. The handful of specifications that climb above the
+band are the most flexible covariance models, which read the data’s skew
+and correlation as extra components; the twins, which share that skew
+and correlation, climb with them. The apparent “types” are reproduced by
+twins that contain none, so this test detects no excess under its
+reference. That is weaker than a finding that latent kinds of people are
+absent, which these runs do not establish.
 
 ## Convergent evidence from taxometrics
 
@@ -197,7 +213,8 @@ Running one does not soften the test; it blinds the test, deliberately
 and in a known direction. An exceedance that survives a null which has
 already matched tail co-movement away cannot be attributed to tail
 co-movement. The Gaussian run remains the test. The t run is a follow-up
-question asked of an exceedance the Gaussian run has already licensed.
+question asked of a departure the Gaussian run has already shown, and it
+does not by itself establish or rule out clusters.
 
 The question is worth asking because the failure mode has been measured.
 On typeless data whose dependence is non-Gaussian, generated from a t
@@ -206,7 +223,7 @@ real personality data, the count test fires in 99 to 100 percent of
 samples across tail-dependence strengths, as the accompanying paper
 reports. Standard criteria behave no better on the same data.
 Heavy-tailed dependence is not a rare edge case in questionnaire and
-clinical data, so a verdict of *exceeds the Gaussian null* does not on
+clinical data, so a *departure from the Gaussian reference* does not on
 its own separate tails from types.
 
 ``` r
@@ -225,7 +242,7 @@ tail structure adaptively, which is the failure this section exists to
 avoid.
 
 The t rung never replaces the Gaussian run and is never reported alone.
-A `matchednull` result quoted without its Gaussian verdict is not a
+A `matchednull` result quoted without its Gaussian outcome is not a
 matched-null result.
 
 | Gaussian rung | t rung | Reading |
@@ -281,9 +298,9 @@ visibly bimodal. The twin copies the observed values of every variable,
 so it copies that bimodal margin intact. And a bimodal margin is on its
 own enough to produce two components, with no help from the dependence
 structure at all. So the twin reports two clusters as well, the real
-value no longer stands out against the twins, and the verdict comes back
-null-like on a structure that is genuinely there. This is the case the
-qualifier in [Constructing the matched
+value no longer stands out against the twins, and the outcome comes back
+as no detected excess on a structure that is genuinely there. This is
+the case the qualifier in [Constructing the matched
 null](#constructing-the-matched-null) was pointing at.
 
 It would be convenient to stop there and file the whole thing under
@@ -347,10 +364,11 @@ readings.
 ## References
 
 The method, its positive controls, and its false-positive calibration
-are described in the accompanying paper, *Types Without Taxa: A
-Covariance-Matched-Null Multiverse Test of Categorical versus Continuous
-Personality Structure* (Meng, 2026; preregistration:
-<https://doi.org/10.17605/OSF.IO/2EKCG>).
+are described in the accompanying paper, *A Matched-Null Test of Whether
+the Clusters a Pipeline Reports Are Real, With an Application to
+Personality Types* (Meng, 2026, under review). Its personality
+application was preregistered as *Types Without Taxa*
+(<https://doi.org/10.17605/OSF.IO/2EKCG>).
 
 Helgeson, E. S., Vock, D. M., and Bair, E. (2021). Nonparametric cluster
 significance testing with reference to a unimodal null distribution.

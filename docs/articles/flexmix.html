@@ -17,8 +17,8 @@
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Auditing a flexmix pipeline">
-<meta name="description" content="How to wrap a stepFlexmix workflow as the statistic of a matched-null test: what to return, where the EM randomness belongs, and two worked examples, one where the selected component count is only the data's shape and one where it survives the twins.">
-<meta property="og:description" content="How to wrap a stepFlexmix workflow as the statistic of a matched-null test: what to return, where the EM randomness belongs, and two worked examples, one where the selected component count is only the data's shape and one where it survives the twins.">
+<meta name="description" content="How to wrap a stepFlexmix workflow as the statistic of a matched-null test: what to return, where the EM randomness belongs, and two worked examples, one where the twins reproduce the selected component count and one where it survives them.">
+<meta property="og:description" content="How to wrap a stepFlexmix workflow as the statistic of a matched-null test: what to return, where the EM randomness belongs, and two worked examples, one where the twins reproduce the selected component count and one where it survives them.">
 <meta property="og:image" content="https://haomeng797-ship-it.github.io/matchednull/logo.png">
 </head>
 <body>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">matchednull</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,18 +89,18 @@ exchangeable model drivers, and a <code><a href="https://rdrr.io/pkg/flexmix/man
 fits a range of component numbers and hands back the best by BIC. That
 selected number inherits the problem this package exists for. On data
 with skew or correlation, BIC often prefers several components even when
-the population is a single undivided cloud, so the number describes the
-data’s shape at least as often as it describes subpopulations, and
-nothing in the flexmix output says which reading you are entitled
-to.</p>
-<p>The matched-null test asks the deciding question: would a dataset
-with the same margins and the same correlations, but no subpopulations,
-have led <code><a href="https://rdrr.io/pkg/flexmix/man/stepFlexmix.html" class="external-link">stepFlexmix()</a></code> to the same number? The <a href="matchednull.html">main vignette</a> and the accompanying paper run
+the population is a single undivided cloud, so a reported number can
+come from margins and correlations alone rather than from
+subpopulations, and nothing in the flexmix output says which reading you
+are entitled to.</p>
+<p>The matched-null test asks a specific question: would a dataset with
+the same margins and the same correlations, but no subpopulations, have
+led <code><a href="https://rdrr.io/pkg/flexmix/man/stepFlexmix.html" class="external-link">stepFlexmix()</a></code> to the same number? The <a href="matchednull.html">main vignette</a> and the accompanying paper run
 that audit through <code>mclust</code>. Pointing it at flexmix instead
 takes about ten lines, but two of those lines are easy to get wrong in
 quiet ways, which is what this article is for.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/haomeng797-ship-it/matchednull" class="external-link">matchednull</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haomeng797-ship-it.github.io/matchednull/">matchednull</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">flexmix</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="the-pipeline-being-audited">The pipeline being audited<a class="anchor" aria-label="anchor" href="#the-pipeline-being-audited"></a>
@@ -162,7 +162,7 @@ belongs in the wrapper, not in the caller’s memory.</li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="example-1-a-count-that-is-only-the-datas-shape">Example 1: a count that is only the data’s shape<a class="anchor" aria-label="anchor" href="#example-1-a-count-that-is-only-the-datas-shape"></a>
+<h2 id="example-1-a-count-the-twins-reproduce">Example 1: a count the twins reproduce<a class="anchor" aria-label="anchor" href="#example-1-a-count-the-twins-reproduce"></a>
 </h2>
 <p>A single lognormal population with ordinary correlations, and no
 subpopulations by construction:</p>
@@ -184,19 +184,21 @@ answer it:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">7</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/matched_null_test.html">matched_null_test</a></span><span class="op">(</span><span class="va">x_skew</span>, <span class="va">pick_k</span>, R <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Matched-null test (200 null twins)</span></span>
-<span><span class="co">#&gt;   real statistic:      4</span></span>
-<span><span class="co">#&gt;   null interval:       [3, 4]</span></span>
-<span><span class="co">#&gt;   p (real &gt;= nulls):   0.935</span></span>
-<span><span class="co">#&gt;   verdict:             null-like (within the twins' interval)</span></span></code></pre></div>
-<p>The real count sits inside the interval the twins produce. Four
-components is what this shape produces under this pipeline, and reading
-it as four kinds of observation would be reading the skew twice.</p>
+<span><span class="co">#&gt; Matched-null test (200 Gaussian null twins)</span></span>
+<span><span class="co">#&gt;   real statistic:               4</span></span>
+<span><span class="co">#&gt;   null interval:                [3, 4]</span></span>
+<span><span class="co">#&gt;   MC exceedance (null &gt;= real): 0.935</span></span>
+<span><span class="co">#&gt;   outcome:                      no detected excess (within the reference interval)</span></span></code></pre></div>
+<p>The real count sits inside the interval the twins produce: no
+detected excess under this reference. On data built from one population,
+four components is what this shape produces under this pipeline, and
+reading it as four kinds of observation would be reading the skew
+twice.</p>
 </div>
 <div class="section level2">
 <h2 id="example-2-components-the-margins-cannot-see">Example 2: components the margins cannot see<a class="anchor" aria-label="anchor" href="#example-2-components-the-margins-cannot-see"></a>
 </h2>
-<p>The opposite verdict, on data where the groups are real but invisible
+<p>The opposite outcome, on data where the groups are real but invisible
 to any single variable. Two groups share identical margins and differ
 only in the orientation of their correlations, one correlated
 positively, the other weakly negatively (the strongest negative
@@ -222,11 +224,11 @@ which is the regime the matched null exists to protect:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/matched_null_test.html">matched_null_test</a></span><span class="op">(</span><span class="va">x_mix</span>, <span class="va">pick_k</span>, R <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Matched-null test (200 null twins)</span></span>
-<span><span class="co">#&gt;   real statistic:      2</span></span>
-<span><span class="co">#&gt;   null interval:       [1, 1]</span></span>
-<span><span class="co">#&gt;   p (real &gt;= nulls):   0.005</span></span>
-<span><span class="co">#&gt;   verdict:             exceeds the null (beyond margins + covariance)</span></span></code></pre></div>
+<span><span class="co">#&gt; Matched-null test (200 Gaussian null twins)</span></span>
+<span><span class="co">#&gt;   real statistic:               2</span></span>
+<span><span class="co">#&gt;   null interval:                [1, 1]</span></span>
+<span><span class="co">#&gt;   MC exceedance (null &gt;= real): 0.005</span></span>
+<span><span class="co">#&gt;   outcome:                      departure from the reference model (above the interval; kind not settled by this test)</span></span></code></pre></div>
 <p>Every twin comes back at one component and the real data stand at
 two. This is the same pattern as panel A of the positive controls in <a href="how-it-works.html">How the matched-null test works</a>: groups
 that no histogram and no correlation matrix could reveal, found by the
@@ -256,10 +258,11 @@ so pick one setting per analysis and keep it.</p>
 <p>Everything else about the audit is unchanged from the mclust case.
 Inspect the margins first, because a variable that is already bimodal
 carries its groups into the twins and the count test is the wrong
-instrument there. And an exceedance under the Gaussian twins licenses
+instrument there. And a departure from the Gaussian twins means
 “structure beyond margins and correlations”, not yet “types”; the
-t-copula rung that separates heavy-tailed dependence from genuine
-subpopulations is described in <a href="how-it-works.html#a-second-deliberately-blinded-null-the-t-copula-rung">How
+t-copula variant, which checks whether that departure survives
+heavier-tailed dependence in the reference and does not by itself
+establish or rule out clusters, is described in <a href="how-it-works.html#a-second-deliberately-blinded-null-the-t-copula-rung">How
 the matched-null test works</a>, and it applies to a flexmix pipeline
 exactly as written, since the rung lives in the null, not in the
 pipeline.</p>

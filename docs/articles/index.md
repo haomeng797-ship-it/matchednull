@@ -18,5 +18,5 @@
 
   How to wrap a stepFlexmix workflow as the statistic of a matched-null
   test: what to return, where the EM randomness belongs, and two worked
-  examples, one where the selected component count is only the data’s
-  shape and one where it survives the twins.
+  examples, one where the twins reproduce the selected component count
+  and one where it survives them.

@@ -350,10 +350,11 @@ UNPaC and the margin-preserving reference here is supported on both readings.
 ## References
 
 The method, its positive controls, and its false-positive calibration are
-described in the accompanying paper, *Types Without Taxa: A
-Covariance-Matched-Null Multiverse Test of Categorical versus Continuous
-Personality Structure* (Meng, 2026; preregistration:
-<https://doi.org/10.17605/OSF.IO/2EKCG>).
+described in the accompanying paper, *A Matched-Null Test of Whether the
+Clusters a Pipeline Reports Are Real, With an Application to Personality
+Types* (Meng, 2026, under review). Its personality application was
+preregistered as *Types Without Taxa*
+(<https://doi.org/10.17605/OSF.IO/2EKCG>).
 
 Helgeson, E. S., Vock, D. M., and Bair, E. (2021). Nonparametric cluster
 significance testing with reference to a unimodal null distribution.

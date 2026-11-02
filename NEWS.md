@@ -32,6 +32,17 @@
   under a reference fitted to the same data, not an exact finite-sample
   p-value, and `copula = "t"` as a sensitivity variant with heavier-tailed
   dependence that does not by itself establish or rule out clusters.
+* `citation("matchednull")` now gives the title of the manuscript under
+  review, *A Matched-Null Test of Whether the Clusters a Pipeline Reports Are
+  Real, With an Application to Personality Types*. It previously gave the
+  title of the preregistration, *Types Without Taxa*.
+* The calibration summary in the README now reports runs in which the search
+  range was wide enough that the tested count never reached its upper limit:
+  on skewed clusterless data the test flags 4 of 100 datasets at n = 500 and
+  at n = 2,000 (nominal 2.5%), while BIC and ICL choose more than one cluster
+  in all of them. The earlier summary, which said the test flagged none, came
+  from a capped range, under which the twins' 97.5th percentile sat at the cap
+  and could not be exceeded.
 
 # matchednull 0.2.1
 

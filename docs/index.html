@@ -17,8 +17,8 @@
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Matched-Null Tests for Cluster-Count Claims">
-<meta name="description" content="Builds matched nulls for cluster-count claims: synthetic twins of a dataset that preserve every marginal distribution and the full correlation matrix while containing no cluster structure by construction. A reported number of clusters or &quot;types&quot; can then be tested against what the data's own margins and covariance already produce, using any clustering pipeline. A t-copula option adds tail dependence to the null, so that an apparent excess of clusters can be checked against a heavier-tailed alternative before it is read as evidence of types. Implements the matched-null procedure of Meng (2026) &quot;Types Without Taxa&quot; &lt;doi:10.17605/OSF.IO/2EKCG&gt;.">
-<meta property="og:description" content="Builds matched nulls for cluster-count claims: synthetic twins of a dataset that preserve every marginal distribution and the full correlation matrix while containing no cluster structure by construction. A reported number of clusters or &quot;types&quot; can then be tested against what the data's own margins and covariance already produce, using any clustering pipeline. A t-copula option adds tail dependence to the null, so that an apparent excess of clusters can be checked against a heavier-tailed alternative before it is read as evidence of types. Implements the matched-null procedure of Meng (2026) &quot;Types Without Taxa&quot; &lt;doi:10.17605/OSF.IO/2EKCG&gt;.">
+<meta name="description" content="Builds matched nulls for cluster-count claims: synthetic twins of a dataset that preserve every marginal distribution exactly and the correlation matrix approximately, while containing no cluster structure by construction. A reported number of clusters or &quot;types&quot; can then be tested against what the data's own margins and covariance already produce, using any clustering pipeline. A t-copula option is a sensitivity check that adds tail dependence to the reference, so an apparent excess of clusters can be rerun against a heavier-tailed reference; neither outcome of that rerun establishes that types exist. Implements the matched-null procedure of Meng (2026) &quot;Types Without Taxa&quot; &lt;doi:10.17605/OSF.IO/2EKCG&gt;.">
+<meta property="og:description" content="Builds matched nulls for cluster-count claims: synthetic twins of a dataset that preserve every marginal distribution exactly and the correlation matrix approximately, while containing no cluster structure by construction. A reported number of clusters or &quot;types&quot; can then be tested against what the data's own margins and covariance already produce, using any clustering pipeline. A t-copula option is a sensitivity check that adds tail dependence to the reference, so an apparent excess of clusters can be rerun against a heavier-tailed reference; neither outcome of that rerun establishes that types exist. Implements the matched-null procedure of Meng (2026) &quot;Types Without Taxa&quot; &lt;doi:10.17605/OSF.IO/2EKCG&gt;.">
 <meta property="og:image" content="https://haomeng797-ship-it.github.io/matchednull/logo.png">
 </head>
 <body>
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">matchednull</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,19 +76,19 @@
 </div>
 <p><a href="https://CRAN.R-project.org/package=matchednull" class="external-link"><img src="https://www.r-pkg.org/badges/version/matchednull" alt="CRAN status"></a> <a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT"></a> <a href="https://doi.org/10.17605/OSF.IO/2EKCG" class="external-link"><img src="https://img.shields.io/badge/OSF-prereg-337ab7.svg" alt="Preregistration"></a> <a href="https://doi.org/10.5281/zenodo.21610608" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.21610608.svg" alt="DOI"></a></p>
 <p>Clustering methods will always give you clusters, even when the data are one smooth cloud. That makes it hard to know whether the reported clusters reflect real structure or are simply artifacts of the method.</p>
-<p>matchednull helps you find out. It creates a null twin of your dataset with exactly the same marginal distributions and approximately the same correlation structure, but no cluster structure by construction. You then run your own clustering pipeline on both the observed data and the null twins. If the observed data consistently yield more clusters than the null twins, that’s evidence of genuine cluster structure. Otherwise, you’ll know before a reviewer asks.</p>
+<p>matchednull helps you find out. It creates a null twin of your dataset with exactly the same marginal distributions and approximately the same correlation structure, but no cluster structure by construction. You then run your own clustering pipeline on both the observed data and the null twins. If the observed data yield more clusters than the null twins, they carry structure that a reference with their margins and correlations does not, which is where a types claim can start rather than where it ends. If they don’t, you’ll know before a reviewer asks.</p>
 <p align="center">
 <img src="reference/figures/positive_control.png#gh-light-mode-only" class="fig-light" width="92%" alt="Positive controls: the test detects real types and stays quiet on typeless data"><img src="reference/figures/positive_control_dark.png#gh-dark-mode-only" class="fig-dark" width="92%" alt="Positive controls: the test detects real types and stays quiet on typeless data"></p>
-<p><em>Positive controls. Signal strength is the within-component correlation in panel A and the separation between means, in standard deviations, in panel B. The grey shaded band is the matched null’s 95% interval: a point is red (detected) when the real number of clusters exceeds the band, grey (null-like) when it falls inside. The test finds real types whether they live only in the correlation structure (A) or in well-separated means (B).</em></p>
+<p><em>Positive controls. Signal strength is the within-component correlation in panel A and the separation between means, in standard deviations, in panel B. The grey shaded band is the matched null’s 95% interval: a point is red (detected) when the real number of clusters exceeds the band, grey (the legend’s null-like label, meaning within the reference interval) when it falls inside. The test finds real types whether they live only in the correlation structure (A) or in well-separated means (B).</em></p>
 <p>One thing in that figure is worth a second look: in panel B the test stops firing at the largest separation, which is the opposite of what a power curve should do. <a href="https://haomeng797-ship-it.github.io/matchednull/articles/how-it-works.html"><strong>How it works</strong></a> follows the construction out to that point, explains what the test is declining to answer there, and shows the calibration behind the rest of the figure.</p>
-<p><code><a href="reference/copula_null.html">copula_null()</a></code> generates the null twins, preserving every marginal distribution exactly and the correlation matrix to within sampling error. <code><a href="reference/matched_null_test.html">matched_null_test()</a></code> applies any user-supplied clustering pipeline to the observed data and to <code>R</code> null twins, then tests whether the observed result stands out from the null distribution.</p>
+<p><code><a href="reference/copula_null.html">copula_null()</a></code> generates the null twins, preserving every marginal distribution exactly (each twin column is a permutation of the observed values) and reproducing the correlation matrix approximately: the observed correlation matrix is used as the latent correlation of the copula, and non-normal margins move the output Pearson correlations, so they come out close but not exact. <code><a href="reference/matched_null_test.html">matched_null_test()</a></code> applies any user-supplied clustering pipeline to the observed data and to <code>R</code> null twins, then reports whether the observed result stands out from the twins. Its <code>p_exceed</code> is a plug-in Monte Carlo exceedance quantity under a reference fitted to the same data, not an exact finite-sample p-value.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"matchednull"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># dev version, has the t-copula stress test</span></span>
+<span><span class="co"># development version</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"haomeng797-ship-it/matchednull"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -105,17 +105,17 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/matched_null_test.html">matched_null_test</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">pick_k</span>, R <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Matched-null test (50 Gaussian null twins)</span></span>
-<span><span class="co">#&gt;   real statistic:      1</span></span>
-<span><span class="co">#&gt;   null interval:       [1, 1]</span></span>
-<span><span class="co">#&gt;   p (real &gt;= nulls):   1</span></span>
-<span><span class="co">#&gt;   verdict:             null-like (within the twins' interval)</span></span></code></pre></div>
+<span><span class="co">#&gt;   real statistic:               1</span></span>
+<span><span class="co">#&gt;   null interval:                [1, 1]</span></span>
+<span><span class="co">#&gt;   MC exceedance (null &gt;= real): 1</span></span>
+<span><span class="co">#&gt;   outcome:                      no detected excess (within the reference interval)</span></span></code></pre></div>
 <p>See <code><a href="articles/matchednull.html">vignette("matchednull")</a></code> for the full walk-through, including a case where genuine types hide in the dependence structure and the test fires.</p>
-<p>In our calibration runs on skewed but clusterless data, standard criteria (BIC, the bootstrap LRT) reported structure in every dataset. The matched-null test flagged none of them.</p>
+<p>In our calibration runs on skewed but clusterless data (100 datasets each at n = 500 and n = 2,000, with the search range set wide enough that the count being tested never reached its upper limit), BIC and ICL chose more than one cluster in every dataset. The matched-null test flagged 4 of 100 at each sample size, close to the 2.5% expected by chance under its rule.</p>
 </div>
 <div class="section level2">
 <h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
 </h2>
-<p>The method, its positive controls, and its false-positive calibration are described in the accompanying paper <em>Types Without Taxa</em> (Meng, 2026; preregistration: <a href="https://osf.io/2ekcg" class="external-link uri">https://osf.io/2ekcg</a>).</p>
+<p>The method, its positive controls, and its false-positive calibration are described in the accompanying paper, <em>A Matched-Null Test of Whether the Clusters a Pipeline Reports Are Real, With an Application to Personality Types</em> (Meng, 2026, under review). Its personality application was preregistered as <em>Types Without Taxa</em> (<a href="https://osf.io/2ekcg" class="external-link uri">https://osf.io/2ekcg</a>).</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

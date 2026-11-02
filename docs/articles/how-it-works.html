@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">matchednull</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,9 +94,10 @@ they often pick several. So when an analysis reports that a dataset
 contains, say, four personality types, the number may describe the
 population, or it may describe only the shape of the data under that
 method. Nothing in the output tells you which.</p>
-<p>The matched-null test separates the two by asking a single question:
-<strong>would a dataset with the same margins and the same correlations,
-but no types, have produced the same answer?</strong></p>
+<p>The matched-null test puts the number to a specified reference model
+by asking a single question: <strong>would a dataset with the same
+margins and the same correlations, but no types, have produced the same
+answer?</strong></p>
 </div>
 <div class="section level2">
 <h2 id="constructing-the-matched-null">Constructing the matched null<a class="anchor" aria-label="anchor" href="#constructing-the-matched-null"></a>
@@ -118,12 +119,10 @@ with empirical margins
 and correlation matrix
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>.
 Draw
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>∼</mo><mi>𝒩</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Z \sim \mathcal{N}(0, \Omega)</annotation></semantics></math>
-with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math>
-tuned so the induced correlations match
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>,
-then send each column back through its own empirical quantile function,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>∼</mo><mi>𝒩</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>C</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Z \sim \mathcal{N}(0, C)</annotation></semantics></math>,
+with the observed correlation matrix used directly as the latent
+correlation of the copula, then send each column back through its own
+empirical quantile function,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>j</mi></msub><mo>=</mo><msubsup><mi>F</mi><mi>j</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mspace width="-0.167em"></mspace><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mi mathvariant="normal">Φ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>Z</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Y_j = F_j^{-1}\!\big(\Phi(Z_j)\big)</annotation></semantics></math>.
 Read from the inside out, that asks which percentile the Gaussian draw
 sits at and returns the real data value at that percentile.</p>
@@ -134,17 +133,23 @@ has <em>exactly</em> the empirical distribution of
 since the twin reshuffles observed values and invents none, so no
 marginal test can separate the two. The correlation matrix of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
-matches
+is close to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
-to within sampling error. And the copula contributes no clustering of
-its own: the Gaussian dependence is smooth, with no islands or gaps, so
-<strong>as long as each margin is itself unimodal the twin contains no
-cluster structure by construction</strong>. That qualifier is doing real
-work and is not boilerplate. A margin that is already multimodal is
-copied into the twin along with everything else, and it can carry groups
-in on its own; the section <a href="#what-the-test-declines-to-answer">What the test declines to
-answer</a> is about exactly that case. Outside it, whatever your
-pipeline reports on the twin was manufactured by the pipeline.</p>
+but not in general equal to it:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+enters as the latent correlation of the Gaussian draw, and sending the
+columns back through non-normal empirical margins changes the Pearson
+correlations, so the match is approximate, and for skewed or
+heavy-tailed margins the gap can be systematic rather than sampling
+noise. And the copula contributes no clustering of its own: the Gaussian
+dependence is smooth, with no islands or gaps, so <strong>as long as
+each margin is itself unimodal the twin contains no cluster structure by
+construction</strong>. That qualifier is doing real work and is not
+boilerplate. A margin that is already multimodal is copied into the twin
+along with everything else, and it can carry groups in on its own; the
+section <a href="#what-the-test-declines-to-answer">What the test
+declines to answer</a> is about exactly that case. Outside it, whatever
+your pipeline reports on the twin was manufactured by the pipeline.</p>
 <p>Both claims are cheap to check, so the block below is run and its
 output shown.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -157,7 +162,7 @@ output shown.</p>
 <span><span class="va">twin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copula_null.html">copula_null</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">twin</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>   <span class="co"># margins: identical</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">twin</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>           <span class="co"># correlations: close</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">twin</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>           <span class="co"># correlations: close, not exact</span></span>
 <span><span class="co">#&gt;      [,1]  [,2]  [,3]</span></span>
 <span><span class="co">#&gt; [1,] 0.00  0.01  0.05</span></span>
 <span><span class="co">#&gt; [2,] 0.01  0.00 -0.03</span></span>
@@ -184,11 +189,22 @@ is</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mfrac><mrow><mn>1</mn><mo>+</mo><mi>#</mi><mo stretchy="false" form="prefix">{</mo><mspace width="0.167em"></mspace><mi>r</mi><mo>:</mo><msub><mi>t</mi><mi>r</mi></msub><mo>≥</mo><msub><mi>t</mi><mn>0</mn></msub><mspace width="0.167em"></mspace><mo stretchy="false" form="postfix">}</mo></mrow><mrow><mi>R</mi><mo>+</mo><mn>1</mn></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
 p \;=\; \frac{1 + \#\{\, r : t_r \ge t_0 \,\}}{R + 1}.
 </annotation></semantics></math></p>
-<p>The verdict reads <em>null-like</em> when
+<p>This is a plug-in Monte Carlo exceedance quantity under a reference
+fitted to the same data, not an exact finite-sample
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value:
+the reference’s correlations are estimated from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+and reproduced only approximately, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
+is a comparison against a reference fitted to the same data rather than
+a test with guaranteed size. The outcome reads <em>no detected
+excess</em> when
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>0</mn></msub><annotation encoding="application/x-tex">t_0</annotation></semantics></math>
-sits inside the interval the twins produce, and <em>exceeds the
-null</em> when the real data stand out. The null is defined at the level
-of the data, not the pipeline, so the same twins work for a
+sits inside the interval the twins produce, and <em>departure from the
+reference model</em> when the real data stand out above it. A departure
+says the data carry structure this reference does not; what kind of
+structure is not settled by this test. The reference is defined at the
+level of the data, not the pipeline, so the same twins work for a
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>-means
 heuristic, a published typology’s exact workflow, or a mixture
 model.</p>
@@ -205,8 +221,8 @@ and raises the signal strength.</p>
 within-component correlation in panel A and the separation between
 means, in standard deviations, in panel B. The grey shaded band is the
 95% interval of the matched-null median k: a point is red (detected)
-when the real value exceeds the band and grey (null-like) when it falls
-inside.
+when the real value exceeds the band and grey (the legend’s null-like
+label: within the reference interval) when it falls inside.
 </figcaption></figure><p>In panel A the types share identical margins and differ only in the
 <em>orientation</em> of their within-group correlations. A single
 Gaussian copula has one correlation matrix and cannot reproduce two, so
@@ -230,15 +246,18 @@ fourteen <code>mclust</code> covariance parameterizations, on several
 public Big Five and HEXACO datasets, gives the specification curve in <a href="#fig-spec-curve">Figure 2</a>.</p>
 <figure id="fig-spec-curve"><img src="figures/spec_curve.png" class="fig-light" width="100%" alt="Selected number of types across fourteen mclust models, against the null band"><img src="figures/spec_curve_dark.png" class="fig-dark" width="100%" alt="Selected number of types across fourteen mclust models, against the null band"><figcaption><strong>Figure 2.</strong> Selected number of types across all fourteen
 mclust covariance models (steps), against the null band the twins
-produce (grey). The median verdict is null-like in every dataset.
+produce (grey). The median outcome is inside the reference interval in
+every dataset.
 </figcaption></figure><p>The number of types the pipeline selects (the step function) sits
 inside the band the twins produce (grey) for the great majority of
-specifications, and the median verdict is null-like in every dataset.
-The handful of specifications that climb above the band are the most
-flexible covariance models, which read the data’s skew and correlation
-as extra components; the twins, which share that skew and correlation,
-climb with them. The apparent “types” are the shape of the data under
-<code>mclust</code>, not latent kinds of people.</p>
+specifications, and the median outcome is inside the reference interval
+in every dataset. The handful of specifications that climb above the
+band are the most flexible covariance models, which read the data’s skew
+and correlation as extra components; the twins, which share that skew
+and correlation, climb with them. The apparent “types” are reproduced by
+twins that contain none, so this test detects no excess under its
+reference. That is weaker than a finding that latent kinds of people are
+absent, which these runs do not establish.</p>
 </div>
 <div class="section level2">
 <h2 id="convergent-evidence-from-taxometrics">Convergent evidence from taxometrics<a class="anchor" aria-label="anchor" href="#convergent-evidence-from-taxometrics"></a>
@@ -276,8 +295,9 @@ null. Running one does not soften the test; it blinds the test,
 deliberately and in a known direction. An exceedance that survives a
 null which has already matched tail co-movement away cannot be
 attributed to tail co-movement. The Gaussian run remains the test. The t
-run is a follow-up question asked of an exceedance the Gaussian run has
-already licensed.</p>
+run is a follow-up question asked of a departure the Gaussian run has
+already shown, and it does not by itself establish or rule out
+clusters.</p>
 <p>The question is worth asking because the failure mode has been
 measured. On typeless data whose dependence is non-Gaussian, generated
 from a t copula carrying tail dependence over a correlation matrix taken
@@ -285,7 +305,7 @@ from real personality data, the count test fires in 99 to 100 percent of
 samples across tail-dependence strengths, as the accompanying paper
 reports. Standard criteria behave no better on the same data.
 Heavy-tailed dependence is not a rare edge case in questionnaire and
-clinical data, so a verdict of <em>exceeds the Gaussian null</em> does
+clinical data, so a <em>departure from the Gaussian reference</em> does
 not on its own separate tails from types.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/matched_null_test.html">matched_null_test</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">cluster_fn</span>, R <span class="op">=</span> <span class="fl">200</span>, copula <span class="op">=</span> <span class="st">"t"</span>, df <span class="op">=</span> <span class="fl">8</span><span class="op">)</span>  <span class="co"># moderate tails</span></span>
@@ -301,7 +321,7 @@ tail structure adaptively, which is the failure this section exists to
 avoid.</p>
 <p>The t rung never replaces the Gaussian run and is never reported
 alone. A <code>matchednull</code> result quoted without its Gaussian
-verdict is not a matched-null result.</p>
+outcome is not a matched-null result.</p>
 <table class="table">
 <colgroup>
 <col width="33%">
@@ -384,9 +404,9 @@ has become visibly bimodal. The twin copies the observed values of every
 variable, so it copies that bimodal margin intact. And a bimodal margin
 is on its own enough to produce two components, with no help from the
 dependence structure at all. So the twin reports two clusters as well,
-the real value no longer stands out against the twins, and the verdict
-comes back null-like on a structure that is genuinely there. This is the
-case the qualifier in <a href="#constructing-the-matched-null">Constructing the matched null</a>
+the real value no longer stands out against the twins, and the outcome
+comes back as no detected excess on a structure that is genuinely there.
+This is the case the qualifier in <a href="#constructing-the-matched-null">Constructing the matched null</a>
 was pointing at.</p>
 <p>It would be convenient to stop there and file the whole thing under
 expected behaviour, except that doing so skips the part worth examining,
@@ -447,9 +467,10 @@ on both readings.</p>
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <p>The method, its positive controls, and its false-positive calibration
-are described in the accompanying paper, <em>Types Without Taxa: A
-Covariance-Matched-Null Multiverse Test of Categorical versus Continuous
-Personality Structure</em> (Meng, 2026; preregistration: <a href="https://doi.org/10.17605/OSF.IO/2EKCG" class="external-link uri">https://doi.org/10.17605/OSF.IO/2EKCG</a>).</p>
+are described in the accompanying paper, <em>A Matched-Null Test of
+Whether the Clusters a Pipeline Reports Are Real, With an Application to
+Personality Types</em> (Meng, 2026, under review). Its personality
+application was preregistered as <em>Types Without Taxa</em> (<a href="https://doi.org/10.17605/OSF.IO/2EKCG" class="external-link uri">https://doi.org/10.17605/OSF.IO/2EKCG</a>).</p>
 <p>Helgeson, E. S., Vock, D. M., and Bair, E. (2021). Nonparametric
 cluster significance testing with reference to a unimodal null
 distribution. <em>Biometrics</em>, 77(4), 1215-1226. <a href="https://doi.org/10.1111/biom.13376" class="external-link uri">https://doi.org/10.1111/biom.13376</a></p>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">matchednull</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,11 +44,28 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.2" id="matchednull-022">matchednull 0.2.2<a class="anchor" aria-label="anchor" href="#matchednull-022"></a></h2>
+<ul><li>
+<code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> now stops with an informative error when <code>cluster_fn</code> returns an invalid value (missing, non-finite, non-numeric, or not of length one), on the real data or on any twin. The error names the call (“the real data” or “null twin r of R”). Previously an invalid twin was silently dropped from the numerator of <code>p_exceed</code> while the denominator kept the requested <code>R</code>, and the printed summary still reported all <code>R</code> twins, so a run in which most twins had failed could print a p-value and an outcome as if nothing had gone wrong. Errors raised inside <code>cluster_fn</code> propagate unchanged, as before. Numerical results for valid inputs are unchanged: seeded runs reproduce exactly.</li>
+<li>The printed exceedance line is relabelled. It read “p (real &gt;= nulls)”, but the numerator counts twins whose statistic reaches the real value, so the label named the wrong direction. It now reads “MC exceedance (null &gt;= real)”, and the other printed labels are re-padded to keep the block aligned. The value is unchanged: <code>(1 + sum(null &gt;= real)) / (R + 1)</code>, as before.</li>
+<li>The printed outcome line is renamed. The three outcomes now read “no detected excess (within the reference interval)”, “departure from the reference model (above the interval; kind not settled by this test)”, and “below the reference range (a diagnostic, not a verdict)”. They replace “null-like (within the twins’ interval)”, “exceeds the null (beyond margins
+<ul><li>covariance)“, and”below the null interval”. Returned values are unchanged.</li>
+</ul></li>
+<li>Documentation corrected. The twins preserve the margins exactly (each column is a permutation of the observed values) but reproduce the correlations only approximately: the observed correlation matrix is used as the latent correlation of the copula, and non-normal margins change the output Pearson correlations, so the earlier “to within sampling error” wording was wrong. <code>p_exceed</code> is now described as a plug-in Monte Carlo exceedance quantity under a reference fitted to the same data, not an exact finite-sample p-value, and <code>copula = "t"</code> as a sensitivity variant with heavier-tailed dependence that does not by itself establish or rule out clusters.</li>
+<li>
+<code>citation("matchednull")</code> now gives the title of the manuscript under review, <em>A Matched-Null Test of Whether the Clusters a Pipeline Reports Are Real, With an Application to Personality Types</em>. It previously gave the title of the preregistration, <em>Types Without Taxa</em>.</li>
+<li>The calibration summary in the README now reports runs in which the search range was wide enough that the tested count never reached its upper limit: on skewed clusterless data the test flags 4 of 100 datasets at n = 500 and at n = 2,000 (nominal 2.5%), while BIC and ICL choose more than one cluster in all of them. The earlier summary, which said the test flagged none, came from a capped range, under which the twins’ 97.5th percentile sat at the cap and could not be exceeded.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.1" id="matchednull-021">matchednull 0.2.1<a class="anchor" aria-label="anchor" href="#matchednull-021"></a></h2><p class="text-muted">CRAN release: 2026-08-21</p>
+<ul><li>
+<code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> gains <code>parallel</code>. With <code>parallel = TRUE</code> the twin loop runs through ‘future.apply’, so the backend is whatever <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> the caller has set. Seeded results are reproducible and independent of the number of workers. The default <code>parallel = FALSE</code> path is unchanged, so existing seeded analyses reproduce exactly.</li>
+<li>The maintainer address now uses a permanent personal inbox.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="matchednull-020">matchednull 0.2.0<a class="anchor" aria-label="anchor" href="#matchednull-020"></a></h2>
 <ul><li>
 <code><a href="../reference/copula_null.html">copula_null()</a></code> and <code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> gain <code>copula = "t"</code> and <code>df</code>: t-copula twins preserve the same margins and correlations but add tail dependence. A verdict of “exceeds the Gaussian null” can now be stress-tested against heavier-tailed dependence (<code>df = 8</code>, then <code>3</code>) before it is read as evidence of types.</li>
-<li>
-<code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> gains <code>parallel</code>. With <code>parallel = TRUE</code> the twin loop runs through ‘future.apply’, so the backend is whatever <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> the caller has set. Seeded results are reproducible and independent of the number of workers. The default <code>parallel = FALSE</code> path is unchanged, so existing seeded analyses reproduce exactly.</li>
 <li>
 <code><a href="../reference/matched_null_test.html">matched_null_test()</a></code> results record the null family used (<code>$copula</code>, <code>$df</code>), and the printed summary names it.</li>
 </ul></div>

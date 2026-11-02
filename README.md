@@ -53,7 +53,7 @@ data, not an exact finite-sample p-value.
 ```r
 install.packages("matchednull")
 
-# dev version, has the t-copula stress test
+# development version
 remotes::install_github("haomeng797-ship-it/matchednull")
 ```
 
@@ -79,12 +79,16 @@ matched_null_test(x, pick_k, R = 50)
 See `vignette("matchednull")` for the full walk-through, including a case
 where genuine types hide in the dependence structure and the test fires.
 
-In our calibration runs on skewed but clusterless data, standard criteria
-(BIC, the bootstrap LRT) reported structure in every dataset. The matched-null
-test flagged none of them.
+In our calibration runs on skewed but clusterless data (100 datasets each at
+n = 500 and n = 2,000, with the search range set wide enough that the count
+being tested never reached its upper limit), BIC and ICL chose more than one
+cluster in every dataset. The matched-null test flagged 4 of 100 at each
+sample size, close to the 2.5% expected by chance under its rule.
 
 ## Reference
 
 The method, its positive controls, and its false-positive calibration are
-described in the accompanying paper *Types Without Taxa* (Meng, 2026;
-preregistration: <https://osf.io/2ekcg>).
+described in the accompanying paper, *A Matched-Null Test of Whether the
+Clusters a Pipeline Reports Are Real, With an Application to Personality
+Types* (Meng, 2026, under review). Its personality application was
+preregistered as *Types Without Taxa* (<https://osf.io/2ekcg>).
